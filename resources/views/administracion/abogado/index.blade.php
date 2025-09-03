@@ -20,10 +20,11 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
-                        Listado de roles
+                        Listado de abogados
                     </div>
                     <div class="prism-toggle">
-                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-create">Nuevo</button>
+                        <button class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#modal-create">Agregar</button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -54,29 +55,47 @@
                         <table id="datatable-basic" class="table table-striped text-nowrap w-100">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Rol</th>
+                                    <th>No de usuario</th>
+                                    <th>Nombre</th>
+                                    <th>Apellidos</th>
+                                    <th>Correo electrónico</th>
+                                    <th>Notificar</th>
+                                    <th>Estado</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($roles as $item)
+                                @foreach ($abogados as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
-
+                                        <td>{{ $item->lastname ?? '-' }}</td>
+                                        <td>{{ $item->email }}</td>
                                         <td>
-                                            <a href="{{ url('seguridad/role') }}/{{ $item->id }}/edit"><button
-                                                    class="btn btn-sm btn-info btn-wave" data-bs-toggle="modal"
-                                                    data-bs-target="#modal-edit-{{ $item->id }}">
-                                                    &nbsp;<i class="ri-edit-line"></i>&nbsp;</button></a>
-
+                                            <button class="btn btn-sm btn-dark btn-wave">
+                                                <i class="bi bi-envelope" style="font-size: 18px;"></i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            @if ($item->active)
+                                                <button class="btn btn-sm btn-success">Activo</button>
+                                            @else
+                                                <button class="btn btn-sm btn-danger">Inactivo</button>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-info btn-wave" data-bs-toggle="modal"
+                                                data-bs-target="#modal-edit-{{ $item->id }}">
+                                                &nbsp;<i class="ri-edit-line"></i>&nbsp;
+                                            </button>
                                         </td>
                                     </tr>
-                                @endforeach
 
+                                    @include('administracion.abogado.edit')
+                                @endforeach
                             </tbody>
                         </table>
+
                     </div>
                 </div>
 
@@ -86,38 +105,63 @@
     </div>
 
 
-    <div class="modal fade" id="modal-create" tabindex="-1" aria-labelledby="exampleModalLgLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="modal-create" tabindex="-1" aria-labelledby="modalCreateAbogadoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLgLabel">Crear rol</h6>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h6 class="modal-title" id="modalCreateAbogadoLabel">Agregar abogado</h6>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <form method="POST" action="{{ route('role.store') }}">
+                <form method="POST" action="{{ url('administracion/abogado') }}">
                     @csrf
                     <div class="modal-body">
+                        <div class="row gy-3">
+                            <!-- Nombre -->
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Nombre</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                    name="name" value="{{ old('name') }}" required>
 
-
-                        <div class="row gy-4">
-                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
-                                <label for="input-label" class="form-label">Rol</label>
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}"
-                                    required>
                             </div>
-                        </div>
 
+                            <!-- Apellidos -->
+                            <div class="col-md-6">
+                                <label for="lastname" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control @error('lastname') is-invalid @enderror"
+                                    name="lastname" value="{{ old('lastname') }}" required>
+
+                            </div>
+
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <label for="email" class="form-label">Correo electrónico</label>
+                                <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                    name="email" value="{{ old('email') }}" required>
+
+                            </div>
+
+                            <!-- Contraseña -->
+                            <div class="col-md-6">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    name="password" required>
+
+                            </div>
+
+
+                        </div>
                     </div>
 
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary">Guardar</button>
                     </div>
-
                 </form>
             </div>
-
-            </form>
         </div>
     </div>
+
+
 
 
 
@@ -128,7 +172,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('seguridadMenu', 'roleOption');
+            expandMenuAndHighlightOption('seguridadMenu', 'permisoOption');
 
             $('#datatable-basic').DataTable({
                 language: {

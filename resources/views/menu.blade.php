@@ -342,7 +342,7 @@
 
 
                         <li class="slide">
-                            <a href="widgets.html" class="side-menu__item">
+                            <a href="{{url('administracion/abogado')}}" class="side-menu__item">
                                 <i class="bi bi-people w-6 h-6 side-menu__icon"></i>
                                 <span class="side-menu__label">Abogados</span>
                             </a>

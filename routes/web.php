@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\administracion\AbogadoController;
 use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
 use App\Http\Controllers\seguridad\UserController;
@@ -32,5 +33,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     Route::resource('seguridad/role', RoleController::class);
     Route::post('seguridad/user/update_password/{id}', [UserController::class, 'updatePassword']);
     Route::resource('seguridad/user', UserController::class);
+
+
+    //administracion
+    Route::resource('administracion/abogado', AbogadoController::class);
 
 });
