@@ -11,8 +11,8 @@ class UsersRolesSeeder extends Seeder
 {
     public function run()
     {
-        $rolAbogado = Role::where('id', 1)->first();
-        $rolOperador = Role::where('id', 2)->first();
+        $rolAbogado = Role::where('id', 2)->first();
+        $rolOperador = Role::where('id', 3)->first();
 
         // 20 Abogados
         $abogados = [
