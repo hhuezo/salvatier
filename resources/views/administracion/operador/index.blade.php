@@ -20,7 +20,7 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
-                        Listado de abogados
+                        Listado de operadores
                     </div>
                     <div class="prism-toggle">
                         <button class="btn btn-primary" data-bs-toggle="modal"
@@ -65,7 +65,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($abogados as $item)
+                                @foreach ($operadores as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
@@ -91,7 +91,7 @@
                                         </td>
                                     </tr>
 
-                                    @include('administracion.abogado.edit')
+                                    @include('administracion.operador.edit')
                                 @endforeach
                             </tbody>
                         </table>
@@ -109,10 +109,10 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="modalCreateAbogadoLabel">Agregar abogado</h6>
+                    <h6 class="modal-title" id="modalCreateAbogadoLabel">Agregar operador</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <form method="POST" action="{{ url('administracion/abogado') }}">
+                <form method="POST" action="{{ url('administracion/operador') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="row gy-3">
@@ -172,7 +172,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-abogado');
+            expandMenuAndHighlightOption('li-operador');
 
             $('#datatable-basic').DataTable({
                 language: {

@@ -227,7 +227,7 @@
                                         class="avatar avatar-sm">
                                 </div>
                                 <div class="ms-2">
-                                    <p class="mb-0 text-white fw-bold">{{ Auth::user()->name ?? ''}}</p>
+                                    <p class="mb-0 text-white fw-bold">{{ Auth::user()->name ?? '' }}</p>
                                     <p class="mb-0 text-white-50 small">{{ Auth::user()->email ?? '' }}</p>
                                 </div>
                             </div>
@@ -341,16 +341,16 @@
 
 
 
-                        <li class="slide">
-                            <a href="{{url('administracion/abogado')}}" class="side-menu__item">
+                        <li class="slide" id="li-abogado">
+                            <a href="{{ url('administracion/abogado') }}" class="side-menu__item">
                                 <i class="bi bi-people w-6 h-6 side-menu__icon"></i>
                                 <span class="side-menu__label">Abogados</span>
                             </a>
                         </li>
 
 
-                        <li class="slide">
-                            <a href="widgets.html" class="side-menu__item">
+                         <li class="slide" id="li-operador">
+                            <a href="{{ url('administracion/operador') }}" class="side-menu__item">
                                 <i class="bi bi-headphones w-6 h-6 side-menu__icon"></i>
                                 <span class="side-menu__label">Operadores</span>
                             </a>
@@ -490,21 +490,25 @@
 
 
     <script>
-        function expandMenuAndHighlightOption(menuId, optionId) {
-            // Obtener el elemento del menú por su ID
-            const menuElement = document.getElementById(menuId);
-            // Obtener el elemento de la opción por su ID
-            const optionElement = document.getElementById(optionId);
+        function expandMenuAndHighlightOption(menuId) {
+            // Seleccionar el <li> por su id
+            const menuItem = document.getElementById(menuId);
+            if (!menuItem) return;
 
-            // Desplegar el submenú
-            if (menuElement) {
-                menuElement.classList.add('is-expanded');
+            // Cambiar el fondo del <li>
+            menuItem.style.backgroundColor = '#036554';
+
+            // Cambiar color del texto y del icono dentro del <a>
+            const link = menuItem.querySelector('a.side-menu__item');
+            if (link) {
+                link.style.color = '#fff'; // cambia el texto principal
             }
 
-            // Resaltar la opción seleccionada
-            if (optionElement) {
-                optionElement.classList.add('active');
-            }
+            // Cambiar color de todos los <i> dentro del li
+            const icons = menuItem.querySelectorAll('i');
+            icons.forEach(icon => {
+                icon.style.color = '#fff';
+            });
         }
     </script>
 
