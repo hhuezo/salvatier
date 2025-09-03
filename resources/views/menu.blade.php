@@ -149,6 +149,10 @@
         .app-header {
             background: #000 !important;
         }
+
+        /* .card{
+            background: #E6F5F0 !important;
+        } */
     </style>
 
 
@@ -349,7 +353,7 @@
                         </li>
 
 
-                         <li class="slide" id="li-operador">
+                        <li class="slide" id="li-operador">
                             <a href="{{ url('administracion/operador') }}" class="side-menu__item">
                                 <i class="bi bi-headphones w-6 h-6 side-menu__icon"></i>
                                 <span class="side-menu__label">Operadores</span>
@@ -358,8 +362,8 @@
 
 
 
-                        <li class="slide">
-                            <a href="widgets.html" class="side-menu__item">
+                        <li class="slide" id="li-asesoria">
+                            <a href="{{ url('administracion/asesoria') }}" class="side-menu__item">
                                 <i class="bi bi-pencil-square w-6 h-6 side-menu__icon"></i>
                                 <span class="side-menu__label">Gestionar asesorias</span>
                             </a>

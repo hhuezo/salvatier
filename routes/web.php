@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\administracion\AbogadoController;
+use App\Http\Controllers\administracion\AsesoriaController;
 use App\Http\Controllers\administracion\OperadorController;
 use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
@@ -26,7 +27,7 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
     //seguridad
     Route::resource('seguridad/permission', PermissionController::class);
@@ -39,5 +40,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
     //administracion
     Route::resource('administracion/abogado', AbogadoController::class);
     Route::resource('administracion/operador', OperadorController::class);
-
+    Route::post('administracion/asesoria/confirmar', [AsesoriaController::class,'confirmar']);
+    Route::post('administracion/asesoria/reagendar', [AsesoriaController::class,'reagendar']);
+    Route::resource('administracion/asesoria', AsesoriaController::class);
 });

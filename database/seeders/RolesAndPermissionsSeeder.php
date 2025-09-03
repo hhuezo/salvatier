@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
@@ -15,9 +15,8 @@ class RolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-
         // Crear roles
-        Role::firstOrCreate(['name' => 'administrador']);
+        $adminRole = Role::firstOrCreate(['name' => 'administrador']);
         Role::firstOrCreate(['name' => 'abogado']);
         Role::firstOrCreate(['name' => 'operador']);
 
@@ -33,6 +32,12 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Asignar el rol de 'administrador' al usuario
-        $user->assignRole('administrador');
+        $user->assignRole($adminRole);
+
+        // Crear permiso 'menu_seguridad'
+        $menuSeguridad = Permission::firstOrCreate(['name' => 'menu seguridad']);
+
+        // Asignar el permiso al rol administrador
+        $adminRole->givePermissionTo($menuSeguridad);
     }
 }
