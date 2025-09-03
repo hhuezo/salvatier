@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Optica</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
     <meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
     <meta name="Author" content="Spruko Technologies Private Limited">
     <meta name="keywords"
@@ -223,8 +223,12 @@
                             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <img src="{{ asset('assets/images/faces/15.jpg') }}" alt="img"
+                                    <img src="{{ asset('assets/images/perfil.png') }}" alt="img"
                                         class="avatar avatar-sm">
+                                </div>
+                                <div class="ms-2">
+                                    <p class="mb-0 text-white fw-bold">{{ Auth::user()->name ?? ''}}</p>
+                                    <p class="mb-0 text-white-50 small">{{ Auth::user()->email ?? '' }}</p>
                                 </div>
                             </div>
                         </a>
