@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\administracion;
 
 use App\Http\Controllers\Controller;
-use App\Models\Administracion\Asesoria;
+use App\Models\administracion\Asesoria;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
