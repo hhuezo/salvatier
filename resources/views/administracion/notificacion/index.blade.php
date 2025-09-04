@@ -80,7 +80,8 @@
                                                 <button class="btn btn-sm btn-danger">Inactivo</button>
                                             @endif
                                         </td>
-                                        <td><button class="btn btn-dark  rounded-pill  btn-wave">&nbsp;Ver&nbsp;</button>
+                                        <td><button class="btn btn-dark  rounded-pill  btn-wave"
+                                                onclick="getDetalle({{ $item->id }})">&nbsp;Ver&nbsp;</button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -94,7 +95,7 @@
             </div>
         </div>
 
-        <div class="col-xxl-3">
+        <div class="col-xxl-3" id="divDetalle">
             <div class="card custom-card">
                 <div class="card-header">
                     <div class="card-title me-1">Detalle</div>
@@ -107,49 +108,25 @@
                                     <img src="../assets/images/ecommerce/png/9.png" alt="">
                                 </span>
                                 <div class="flex-fill">
-                                    <p class="mb-0 fw-semibold">Usuario</p>
-                                    <p class="mb-0 text-muted fs-12">Juan Carlos Lopez</p>
+                                    <p class="mb-0 fw-semibold"></p>
+                                    <p class="mb-0 text-muted fs-12"></p>
                                 </div>
 
                             </div>
                         </li>
 
                     </ul>
-                    <div class="p-3 border-bottom border-block-end-dashed">
-                        <div class="d-flex align-items-center justify-content-between flex-wrap">
-                            <div class="fs-12 fw-semibold bg-primary-transparent badge badge-md rounded">12/01/2025
-                                &nbsp;&nbsp;&nbsp;12:00</div>
-                        </div>
-                    </div>
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-primary rounded-pill  btn-wave" data-bs-toggle="modal"
+                            data-bs-target="#modal-confirmar" onclick=" showConfirmar()">&nbsp;Responder&nbsp;</button>
 
 
-                    <div class="p-3 border-bottom border-block-end-dashed">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="text-muted">1 archivo adjunto</div>
-                            <div class="fw-semibold fs-16 text-dark"><i class="bi bi-cloud-download-fill"
-                                    style="font-size: 20px;"></i>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="p-3 border-bottom border-block-end-dashed">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div class="text-muted">1 archivo adjunto</div>
-                            <div class="fw-semibold fs-16 text-dark"><i class="bi bi-cloud-download-fill"
-                                    style="font-size: 20px;"></i>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
 
-                <div class="modal-footer">
-
-                    <button type="button" class="btn btn-primary rounded-pill  btn-wave" data-bs-toggle="modal"
-                        data-bs-target="#modal-confirmar" onclick=" showConfirmar()">&nbsp;Responder&nbsp;</button>
-
-
-                </div>
             </div>
         </div>
 
@@ -157,7 +134,8 @@
     </div>
 
 
-    <div class="modal fade" id="modal-responder" tabindex="-1" aria-labelledby="modalCreateAbogadoLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-responder" tabindex="-1" aria-labelledby="modalCreateAbogadoLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -214,8 +192,28 @@
                 }
             });
 
-
         });
+
+
+
+        function getDetalle(id) {
+            fetch(`{{ url('administracion/notificacion') }}/${id}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud');
+                    }
+                    return response.text(); // recibimos como texto plano
+                })
+                .then(html => {
+                    // Pintar el HTML recibido dentro del div
+                    document.getElementById('divDetalle').innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Ocurrió un error:', error);
+                    document.getElementById('divDetalle').innerHTML =
+                        '<p class="text-danger">No se pudo cargar la notificación.</p>';
+                });
+        }
     </script>
     <!-- End:: row-1 -->
 @endsection

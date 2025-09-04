@@ -35,13 +35,23 @@ class NotificacionController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
-        //
+        try {
+            $notificacion = Notificacion::with('user')->findOrFail($id);
+
+            return view('administracion.notificacion.detalle', compact('notificacion'));
+
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No se pudo obtener la notificación: ' . $e->getMessage()
+            ], 500);
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.
