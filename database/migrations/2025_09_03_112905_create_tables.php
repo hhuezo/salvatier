@@ -39,10 +39,6 @@ return new class extends Migration
         });
 
 
-
-
-
-
         // Tabla asesoria
         Schema::create('asesoria', function (Blueprint $table) {
             $table->id();
@@ -50,33 +46,32 @@ return new class extends Migration
             $table->date('fecha');
             $table->time('hora');
             $table->text('enlace')->nullable();
-            // Llaves foráneas
-            $table->unsignedBigInteger('estado_asesoria_id');
-            $table->unsignedBigInteger('modo_asesoria_id');
-            $table->unsignedBigInteger('tipo_asesoria_id');
+
+            $table->foreignId('estado_asesoria_id')->constrained('estado_asesoria')->restrictOnDelete();
+            $table->foreignId('tipo_asesoria_id')->constrained('tipo_asesoria')->restrictOnDelete();
+            $table->foreignId('modo_asesoria_id')->constrained('modo_asesoria')->restrictOnDelete();
+            $table->foreignId('user_id')->constrained('users')->restrictOnDelete()->restrictOnUpdate();
+
+            $table->timestamps();
+        });
+
+
+
+        Schema::create('notificacion', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('user_id');
-
-            $table->foreign('estado_asesoria_id')
-                ->references('id')
-                ->on('estado_asesoria')
-                ->restrictOnDelete();
-
-            $table->foreign('tipo_asesoria_id')
-                ->references('id')
-                ->on('tipo_asesoria')
-                ->restrictOnDelete();
-
-            $table->foreign('modo_asesoria_id')
-                ->references('id')
-                ->on('modo_asesoria')
-                ->restrictOnDelete();
+            $table->date('fecha');
+            $table->string('mensaje', 300);
+            $table->string('archivo', 150)->nullable();
+            $table->integer('criticidad')->default(1);
+            $table->integer('activo')->default(1);
+            $table->timestamps();
 
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->restrictOnDelete();
-
-            $table->timestamps();
+                ->restrictOnDelete()
+                ->restrictOnUpdate();
         });
     }
 
@@ -89,5 +84,6 @@ return new class extends Migration
         Schema::dropIfExists('tipo_asesoria');
         Schema::dropIfExists('modo_asesoria');
         Schema::dropIfExists('estado_asesoria');
+        Schema::dropIfExists('notificacion');
     }
 };

@@ -206,16 +206,6 @@
                 <!-- Start::header-content-right -->
                 <ul class="header-content-right">
 
-                    <!-- Start::header-element -->
-                    <li class="header-element d-md-none d-block">
-                        <a href="javascript:void(0);" class="header-link" data-bs-toggle="modal"
-                            data-bs-target="#header-responsive-search">
-                            <!-- Start::header-link-icon -->
-                            <i class="bi bi-search header-link-icon"></i>
-                            <!-- End::header-link-icon -->
-                        </a>
-                    </li>
-                    <!-- End::header-element -->
 
 
 
@@ -380,8 +370,8 @@
 
 
 
-                        <li class="slide">
-                            <a href="widgets.html" class="side-menu__item">
+                        <li class="slide" id="li-notificacion">
+                            <a href="{{ url('administracion/notificacion') }}" class="side-menu__item">
                                 <i class="bi bi-bell w-6 h-6 side-menu__icon"></i>
                                 <span class="side-menu__label">Notificaciones</span>
                             </a>

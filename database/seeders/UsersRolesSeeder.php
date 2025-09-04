@@ -136,5 +136,42 @@ class UsersRolesSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         }
+
+
+        //notificaciones
+        $mensajes = [
+            "Su asesoría programada ha sido confirmada.",
+            "Tiene una nueva notificación pendiente de revisión.",
+            "Se ha generado un reporte de su última asesoría.",
+            "Recuerde que la asesoría está próxima a iniciar.",
+            "El documento solicitado ya está disponible para descarga.",
+            "Se detectó un retraso en la sesión, verifique con el asesor.",
+            "Actualización de estado: su asesoría ha sido finalizada.",
+            "Su sesión virtual está lista, revise el enlace de acceso.",
+            "Ha recibido un nuevo comentario en la asesoría.",
+            "Su solicitud ha sido reagendada exitosamente.",
+            "Notificación importante: verifique la criticidad asignada.",
+            "Un archivo adicional ha sido adjuntado a su asesoría.",
+            "Se requiere su confirmación para la próxima asesoría.",
+            "El sistema detectó cambios en la programación.",
+            "Su cuenta ha recibido una nueva notificación administrativa."
+        ];
+
+        $notificaciones = [];
+
+        foreach ($mensajes as $i => $mensaje) {
+            $notificaciones[] = [
+                'user_id' => rand(22, 40),
+                'mensaje' => $mensaje,
+                'archivo' => "documento{$i}.pdf",
+                'criticidad' => rand(1, 3), // 1 = baja, 2 = media, 3 = alta
+                'activo' => 1,
+                'fecha' => now()->subDays(rand(0, 30)), // fecha aleatoria dentro del último mes
+                'created_at' => now()->subDays(rand(0, 30)),
+                'updated_at' => now()->subDays(rand(0, 30)),
+            ];
+        }
+
+        DB::table('notificacion')->insert($notificaciones);
     }
 }
