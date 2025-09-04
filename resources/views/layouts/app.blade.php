@@ -12,11 +12,11 @@
 
 
 
-    <!-- Scripts -->
+    <!-- Scripts style="background: #000 !important" -->
     @vite(['resources/js/app.js'])
 </head>
 
-<body style="background: #000 !important">
+<body>
     @yield('content')
 </body>
 
