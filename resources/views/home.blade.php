@@ -1,5 +1,7 @@
 @extends('menu')
 @section('content')
+
+
     <!-- Highcharts -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
 

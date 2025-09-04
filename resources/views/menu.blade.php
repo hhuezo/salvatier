@@ -217,8 +217,9 @@
                             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                             <div class="d-flex align-items-center">
                                 <div>
-                                    <img src="{{ asset('assets/images/perfil.png') }}" alt="img"
-                                        class="avatar avatar-sm">
+                                    <img src="{{ Auth::user()->photo ? asset('storage/photos/' . Auth::user()->photo) : asset('assets/images/perfil.png') }}"
+                                        alt="img" class="avatar avatar-sm">
+
                                 </div>
                                 <div class="ms-2">
                                     <p class="mb-0 text-white fw-bold">{{ Auth::user()->name ?? '' }}</p>
@@ -304,85 +305,134 @@
                     <ul class="main-menu">
 
                         @can('menu seguridad')
-                            <!-- Start::slide -->
-                            <li class="slide has-sub" id="seguridadMenu">
-                                <a href="javascript:void(0);" class="side-menu__item">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 side-menu__icon"
-                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                            d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
-                                    </svg>
-                                    <span class="side-menu__label">Seguridad</span>
-                                    <i class="ri-arrow-down-s-line side-menu__angle"></i>
-                                </a>
-                                <ul class="slide-menu child1">
-                                    <li class="slide side-menu__label1">
-                                        <a href="javascript:void(0)">Seguridad</a>
-                                    </li>
-                                    <li class="slide">
-                                        <a href="{{ url('seguridad/permission') }}" id="permisoOption"
-                                            class="side-menu__item">Permisos</a>
-                                        <a href="{{ url('seguridad/user') }}" id="usuarioOption"
-                                            class="side-menu__item">Usuarios</a>
-                                        <a href="{{ url('seguridad/role') }}" id="roleOption"
-                                            class="side-menu__item">Roles</a>
-                                    </li>
+                            <!-- Start::slide__category -->
+                            <li class="slide__category"><span class="category-name">Seguridad</span></li>
+                            <!-- End::slide__category -->
 
-                                </ul>
-                            </li>
+
+                            @can('menu permisos')
+                                <li class="slide" id="li-permiso">
+                                    <a href="{{ url('seguridad/permission') }}" class="side-menu__item">
+                                        <i class="bi bi-unlock w-6 h-6 side-menu__icon"></i>
+                                        <span class="side-menu__label">Permisos</span>
+                                    </a>
+                                </li>
+                            @endcan
+
+                            @can('menu usuarios')
+                                <li class="slide" id="li-usuario">
+                                    <a href="{{ url('seguridad/user') }}" class="side-menu__item">
+                                        <i class="bi bi-person w-6 h-6 side-menu__icon"></i>
+                                        <span class="side-menu__label">Usuarios</span>
+                                    </a>
+                                </li>
+                            @endcan
+
+                            @can('menu roles')
+                                <li class="slide" id="li-role">
+                                    <a href="{{ url('seguridad/role') }}" class="side-menu__item">
+                                        <i class="bi bi-card-checklist w-6 h-6 side-menu__icon"></i>
+                                        <span class="side-menu__label">Roles</span>
+                                    </a>
+                                </li>
+                            @endcan
                             <!-- End::slide -->
                         @endcan
 
+                        <li class="slide__category"><span class="category-name">Administración</span></li>
+
+                        @can('menu abogados')
+                            <li class="slide" id="li-abogado">
+                                <a href="{{ url('administracion/abogado') }}" class="side-menu__item">
+                                    <i class="bi bi-people w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Abogados</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu operadores')
+                            <li class="slide" id="li-operador">
+                                <a href="{{ url('administracion/operador') }}" class="side-menu__item">
+                                    <i class="bi bi-headphones w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Operadores</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu gestionar asesorias')
+                            <li class="slide" id="li-asesoria">
+                                <a href="{{ url('administracion/asesoria') }}" class="side-menu__item">
+                                    <i class="bi bi-pencil-square w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Gestionar asesorias</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu gestion de pagos')
+                            <li class="slide">
+                                <a href="widgets.html" class="side-menu__item">
+                                    <i class="bi bi-currency-dollar w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Gestion de pagos</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu notificaciones')
+                            <li class="slide" id="li-notificacion">
+                                <a href="{{ url('administracion/notificacion') }}" class="side-menu__item">
+                                    <i class="bi bi-bell w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Notificaciones</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu gestionar de contenido')
+                            <li class="slide">
+                                <a href="widgets.html" class="side-menu__item">
+                                    <i class="bi bi-pen-fill w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Gestionar de contenido</span>
+                                </a>
+                            </li>
+                        @endcan
 
 
-                        <li class="slide" id="li-abogado">
-                            <a href="{{ url('administracion/abogado') }}" class="side-menu__item">
-                                <i class="bi bi-people w-6 h-6 side-menu__icon"></i>
-                                <span class="side-menu__label">Abogados</span>
-                            </a>
-                        </li>
+                        @can('menu sucursales')
+                            <li class="slide">
+                                <a href="widgets.html" class="side-menu__item">
+                                    <i class="bi bi-houses w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Sucursales</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu inicio')
+                            <li class="slide">
+                                <a href="widgets.html" class="side-menu__item">
+                                    <i class="bi bi-house w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Inicio</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu mis asesorias')
+                            <li class="slide">
+                                <a href="widgets.html" class="side-menu__item">
+                                    <i class="bi bi-card-checklist w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Mis asesorias</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu pagos')
+                            <li class="slide">
+                                <a href="widgets.html" class="side-menu__item">
+                                    <i class="bi bi-currency-dollar w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Pagos</span>
+                                </a>
+                            </li>
+                        @endcan
 
 
-                        <li class="slide" id="li-operador">
-                            <a href="{{ url('administracion/operador') }}" class="side-menu__item">
-                                <i class="bi bi-headphones w-6 h-6 side-menu__icon"></i>
-                                <span class="side-menu__label">Operadores</span>
-                            </a>
-                        </li>
-
-
-
-                        <li class="slide" id="li-asesoria">
-                            <a href="{{ url('administracion/asesoria') }}" class="side-menu__item">
-                                <i class="bi bi-pencil-square w-6 h-6 side-menu__icon"></i>
-                                <span class="side-menu__label">Gestionar asesorias</span>
-                            </a>
-                        </li>
-
-
-
-                        <li class="slide">
-                            <a href="widgets.html" class="side-menu__item">
-                                <i class="bi bi-currency-dollar w-6 h-6 side-menu__icon"></i>
-                                <span class="side-menu__label">Gestión de pagos</span>
-                            </a>
-                        </li>
-
-
-
-                        <li class="slide" id="li-notificacion">
-                            <a href="{{ url('administracion/notificacion') }}" class="side-menu__item">
-                                <i class="bi bi-bell w-6 h-6 side-menu__icon"></i>
-                                <span class="side-menu__label">Notificaciones</span>
-                            </a>
-                        </li>
-
-                        <li class="slide">
-                            <a href="widgets.html" class="side-menu__item">
-                                <i class="bi bi-pen-fill w-6 h-6 side-menu__icon"></i>
-                                <span class="side-menu__label">Gestionar de contenido</span>
-                            </a>
-                        </li>
 
 
                     </ul>
