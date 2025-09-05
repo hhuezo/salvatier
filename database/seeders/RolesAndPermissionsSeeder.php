@@ -54,6 +54,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'menu inicio',
             'menu mis asesorias',
             'menu pagos',
+            'dashboard',
+            'inicio cliente',
         ];
 
         foreach ($permissions as $perm) {
@@ -73,6 +75,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'menu gestion de pagos',
             'menu notificaciones',
             'menu gestionar de contenido',
+            'dashboard',
         ]);
 
         $abogadoRole->syncPermissions([
@@ -82,6 +85,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'menu gestion de pagos',
             'menu notificaciones',
             'menu gestionar de contenido',
+            'dashboard',
         ]);
 
         $operadorRole->syncPermissions([
@@ -91,6 +95,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'menu gestion de pagos',
             'menu notificaciones',
             'menu gestionar de contenido',
+            'dashboard',
         ]);
 
         $clienteRole->syncPermissions([
@@ -98,6 +103,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'menu inicio',
             'menu mis asesorias',
             'menu pagos',
+            'inicio cliente',
         ]);
     }
 }

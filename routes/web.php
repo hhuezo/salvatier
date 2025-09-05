@@ -7,6 +7,7 @@ use App\Http\Controllers\administracion\OperadorController;
 use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
 use App\Http\Controllers\seguridad\UserController;
+use App\Http\Controllers\usuario\AsesoriaUsuarioController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,4 +46,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('administracion/asesoria/reagendar', [AsesoriaController::class, 'reagendar']);
     Route::resource('administracion/asesoria', AsesoriaController::class);
     Route::resource('administracion/notificacion', NotificacionController::class);
+
+
+    Route::get('usuario/asesoria/proximas', [AsesoriaUsuarioController::class,'proximas']);
+    Route::get('usuario/sucursales', [AsesoriaUsuarioController::class,'sucursales']);
+    Route::resource('usuario/asesoria', AsesoriaUsuarioController::class);
 });

@@ -339,9 +339,11 @@
                             <!-- End::slide -->
                         @endcan
 
-                        <li class="slide__category"><span class="category-name">Administración</span></li>
+
 
                         @can('menu abogados')
+                            <li class="slide__category"><span class="category-name">Administración</span></li>
+
                             <li class="slide" id="li-abogado">
                                 <a href="{{ url('administracion/abogado') }}" class="side-menu__item">
                                     <i class="bi bi-people w-6 h-6 side-menu__icon"></i>
@@ -398,7 +400,7 @@
 
                         @can('menu sucursales')
                             <li class="slide">
-                                <a href="widgets.html" class="side-menu__item">
+                                <a href="{{ url('usuario/sucursales') }}" class="side-menu__item">
                                     <i class="bi bi-houses w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Sucursales</span>
                                 </a>
@@ -407,7 +409,7 @@
 
                         @can('menu inicio')
                             <li class="slide">
-                                <a href="widgets.html" class="side-menu__item">
+                                <a href="{{ url('/home') }}" class="side-menu__item">
                                     <i class="bi bi-house w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Inicio</span>
                                 </a>
@@ -416,7 +418,7 @@
 
                         @can('menu mis asesorias')
                             <li class="slide">
-                                <a href="widgets.html" class="side-menu__item">
+                                <a href="{{ url('usuario/asesoria') }}" class="side-menu__item">
                                     <i class="bi bi-card-checklist w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Mis asesorias</span>
                                 </a>
