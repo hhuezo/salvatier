@@ -26,7 +26,6 @@
                 <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-6 col-sm-8 col-12">
                     <div class="card custom-card my-4">
                         <div class="card-body p-5">
-
                             <p class="h5 mb-2 text-center">Registro</p>
                             @if (count($errors) > 0)
                                 <div class="alert alert-danger">
@@ -49,37 +48,35 @@
                                     toastr.error("{{ session('error') }}");
                                 </script>
                             @endif
-                            <br><br>
+                            <br>
 
                             <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                                 @csrf
                                 <div class="row gy-3">
-                                    <div class="col-xl-12 row d-flex align-items-center">
-                                        <div class="col-xl-4 lh-1 mb-3 d-flex justify-content-center">
-                                            <span class="avatar avatar-xxl avatar-rounded">
+                                    <div class="col-xl-12 d-flex flex-column align-items-center mb-4">
+                                        <div class="mb-3">
+                                            <span class="avatar avatar-xxl avatar-rounded d-block mx-auto">
                                                 <img id="previewImage" src="{{ asset('assets/images/podcast/1.jpg') }}"
                                                     alt="Avatar">
                                             </span>
                                         </div>
-                                        <div class="col-xl-5 lh-1 mb-3">
-                                            <!-- Botón que abre el input file -->
-                                            <button type="button" id="uploadBtn"
-                                                class="btn btn-primary me-2 btn-block rounded-pill btn-wave">
-                                                Cargar fotografía
-                                            </button>
-                                            <!-- Input file oculto -->
-                                            <input type="file" name="photo" id="fileInput" accept="image/*"
-                                                style="display: none;">
-                                            @error('photo')
-                                                <div class="text-danger small">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-xl-3 lh-1 mb-3">
-                                            <button type="button" id="deleteBtn"
-                                                class="btn btn-primary btn-block  rounded-pill btn-wave">
-                                                Eliminar
-                                            </button>
-                                        </div>
+
+                                        <button type="button" id="uploadBtn"
+                                            class="btn btn-outline-primary  rounded-pill btn-wave px-4" style="display: block;">
+                                            Cargar fotografía
+                                        </button>
+
+                                        <a href="javascript:void(0);" id="deleteBtn" class="btn btn-outline-danger  rounded-pill btn-wave px-4"
+                                            style="display: none;">
+                                            <i class="ri-delete-bin-line align-middle me-1"></i> Eliminar foto
+                                        </a>
+
+                                        <input type="file" name="photo" id="fileInput" accept="image/*"
+                                            style="display: none;">
+
+                                        @error('photo')
+                                            <div class="text-danger small mt-2">{{ $message }}</div>
+                                        @enderror
                                     </div>
 
                                     <div class="col-xl-12">
@@ -126,12 +123,8 @@
                                         <label for="signup-password" class="form-label text-default">Contraseña<sup
                                                 class="fs-12 text-danger">*</sup></label>
                                         <div class="position-relative">
-                                            <input type="password" name="password"
-                                                class="form-control create-password-input" id="signup-password" required>
-                                            <a href="javascript:void(0);" class="show-password-button text-muted"
-                                                onclick="createpassword('signup-password',this)" id="button-addon2">
-                                                <i class="ri-eye-off-line align-middle"></i>
-                                            </a>
+                                            <input type="password" name="password" class="form-control" id="signup-password"
+                                                required>
                                         </div>
                                         @error('password')
                                             <div class="text-danger small">{{ $message }}</div>
@@ -140,35 +133,22 @@
 
                                     <div class="col-xl-12">
                                         <label for="signup-confirmpassword" class="form-label text-default">Confirmar
-                                            contraseña
-                                            <sup class="fs-12 text-danger">*</sup></label>
+                                            contraseña<sup class="fs-12 text-danger">*</sup></label>
                                         <div class="position-relative">
-                                            <input type="password" name="password_confirmation"
-                                                class="form-control create-password-input" id="signup-confirmpassword"
-                                                required>
-                                            <a href="javascript:void(0);" class="show-password-button text-muted"
-                                                onclick="createpassword('signup-confirmpassword',this)"
-                                                id="button-addon21">
-                                                <i class="ri-eye-off-line align-middle"></i>
-                                            </a>
+                                            <input type="password" name="password_confirmation" class="form-control"
+                                                id="signup-confirmpassword" required>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="d-grid mt-4">
                                     <button class="btn btn-primary btn-lg rounded-pill btn-wave">Registrarse</button>
                                 </div>
                             </form>
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
     </body>
 
     <!-- Bootstrap JS -->
@@ -183,6 +163,17 @@
         // Guardamos la imagen original
         const defaultImage = "{{ asset('assets/images/podcast/1.jpg') }}";
 
+        // Función para actualizar la visibilidad de los botones
+        function updateButtonVisibility() {
+            if (previewImage.src === defaultImage) {
+                uploadBtn.style.display = 'block';
+                deleteBtn.style.display = 'none';
+            } else {
+                uploadBtn.style.display = 'none';
+                deleteBtn.style.display = 'block';
+            }
+        }
+
         // Al hacer click en "Cargar fotografía", abrir el file input
         uploadBtn.addEventListener('click', () => {
             fileInput.click();
@@ -195,6 +186,7 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     previewImage.src = e.target.result; // mostrar preview
+                    updateButtonVisibility();
                 };
                 reader.readAsDataURL(file);
             }
@@ -204,6 +196,10 @@
         deleteBtn.addEventListener('click', () => {
             previewImage.src = defaultImage;
             fileInput.value = ""; // limpiar input file
+            updateButtonVisibility();
         });
+
+        // Inicializar el estado de los botones al cargar la página
+        document.addEventListener('DOMContentLoaded', updateButtonVisibility);
     </script>
 @endsection
