@@ -147,58 +147,59 @@
            background-size: cover;
            background-position: top;  /* desde arriba */
            background-repeat: no-repeat;
-           height: 600px;">
+           height: 450px;">
         </div>
 
         <div class="row" style="margin-top: -100px;">
             <div class="col-md-12 col-xxl-1"></div>
 
             <div class="col-md-12 col-xxl-4">
-                <div class="card border border-primary border-opacity-25 custom-card" style="z-index: 1;">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <img src="{{ asset('assets/images/notificaciones_importante.jpg') }}" alt="Imagen"
-                                    class="img-fluid"
-                                    style="width: 280px; height: 180px; object-fit: cover; border-radius: 8px;">
-                            </div>
 
-                            <div class="flex-grow-1">
-                                <h5 class="mb-2">Próximas asesorías agendadas</h5>
-                                <p class="mb-3 text-muted">Descripcion o subtitulo si lo necesitas.</p>
-                                <div class="text-end">
-                                    <a href="{{ url('usuario/asesoria/proximas') }}">
-                                        <button class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></button>
-                                    </a>
-                                </div>
-                            </div>
+                <div class="card custom-card">
+                    <img src="{{ asset('assets/images/proximas_asesorias.jpg') }}" class="card-img-top" alt="..."
+                        style="height: 180px; object-fit: cover; object-position: center;">
+
+                    <div class="card-body">
+                        <h6 class="card-title fw-medium">Próximas asesorías agendadas</h6>
+                        <p class="card-text text-muted">
+                            As the wind whistled through the dense foliage, scattering leaves like
+                            whispered secrets, a lone sapling stood resilient, its roots anchored deep in the earth.
+                        </p>
+
+                        <div class="card-footer text-end">
+                            <a href="{{url('usuario/asesoria/agendadas')}}">
+                            <button class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></button>
+                            </a>
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="col-md-12 col-xxl-2"></div>
 
             <div class="col-md-12 col-xxl-4">
-                <div class="card border border-primary border-opacity-25 custom-card" style="z-index: 1;">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="flex-shrink-0">
-                                <img src="{{ asset('assets/images/proximas_asesorias.jpg') }}" alt="Imagen" class="img-fluid"
-                                    style="width: 280px; height: 180px; object-fit: cover; border-radius: 8px;">
-                            </div>
 
-                            <div class="flex-grow-1">
-                                <h5 class="mb-2">Notificaciones importantes</h5>
-                                <p class="mb-3 text-muted">Descripcion o subtitulo si lo necesitas.</p>
-                                <div class="text-end">
-                                    <button class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></button>
-                                </div>
-                            </div>
+                <div class="card custom-card">
+                    <img src="{{ asset('assets/images/notificaciones_importante.jpg') }}" class="card-img-top" alt="..."
+                        style="height: 180px; object-fit: cover; object-position: center;">
+
+                    <div class="card-body">
+                        <h6 class="card-title fw-medium">Notificaciones importantes</h6>
+                        <p class="card-text text-muted">
+                            As the wind whistled through the dense foliage, scattering leaves like
+                            whispered secrets, a lone sapling stood resilient, its roots anchored deep in the earth.
+                        </p>
+
+                        <div class="card-footer text-end">
+                            <button class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></button>
                         </div>
                     </div>
                 </div>
+
             </div>
+
+
 
             <div class="col-md-12 col-xxl-1"></div>
         </div>

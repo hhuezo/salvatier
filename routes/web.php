@@ -48,7 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('administracion/notificacion', NotificacionController::class);
 
 
-    Route::get('usuario/asesoria/proximas', [AsesoriaUsuarioController::class,'proximas']);
+    Route::get('usuario/asesoria/agendadas', [AsesoriaUsuarioController::class,'agendadas']);
     Route::get('usuario/sucursales', [AsesoriaUsuarioController::class,'sucursales']);
     Route::resource('usuario/asesoria', AsesoriaUsuarioController::class);
 });

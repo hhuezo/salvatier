@@ -69,7 +69,7 @@ class AsesoriaUsuarioController extends Controller
         //
     }
 
-    public function proximas()
+    public function agendadas()
     {
         $asesorias = Asesoria::with(['estado', 'modo', 'tipo', 'user'])
             ->where('user_id', auth()->user()->id)
@@ -88,7 +88,7 @@ class AsesoriaUsuarioController extends Controller
         })->toArray();
 
 
-        return view('usuario.asesoria.proximas', compact('data'));
+        return view('usuario.asesoria.agendada', compact('data'));
     }
 
     public function sucursales()
