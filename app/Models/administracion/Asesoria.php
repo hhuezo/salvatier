@@ -20,9 +20,16 @@ class Asesoria extends Model
         'modo_asesoria_id',
         'tipo_asesoria_id',
         'user_id',
+        'abogado_asignado_id',
     ];
 
     // Relaciones
+
+    public function abogado_asignado()
+    {
+        return $this->belongsTo(User::class, 'abogado_asignado_id');
+    }
+
     public function estado()
     {
         return $this->belongsTo(EstadoAsesoria::class, 'estado_asesoria_id');

@@ -118,7 +118,7 @@
 
             </div>
         </div>
-        <div class="col-xl-3">
+        <div class="col-xl-3" id="divDetalle">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
@@ -191,16 +191,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary rounded-pill  btn-wave" data-bs-dismiss="modal"
-                        data-bs-toggle="modal" data-bs-target="#modal-reagendar"
-                        onclick="showReagendar()">Reagendar</button>
-                    &nbsp; &nbsp;
-                    <button type="button" class="btn btn-primary rounded-pill  btn-wave" data-bs-toggle="modal"
-                        data-bs-target="#modal-confirmar" onclick=" showConfirmar()">Confirmar</button>
 
-
-                </div>
 
 
             </div>
@@ -210,9 +201,6 @@
 
 
 
-
-    @include('administracion.asesoria.confirmar')
-    @include('administracion.asesoria.reagendar')
 
 
 
@@ -266,70 +254,16 @@
                     if (!response.ok) {
                         throw new Error('Error en la solicitud');
                     }
-                    return response.json();
+                    return response.text(); // <-- recibir HTML
                 })
-                .then(data => {
-                    console.log('Detalle de Asesoría:', data);
-                    document.getElementById('asesoria_id').value = data.data.id;
-                    document.getElementById('userName').innerText = data.data.user.name + ' ' + data.data.user.lastname;
-                    document.getElementById('userEmail').innerText = data.data.user.email;
-                    document.getElementById('descripcion').value = data.data.descripcion; //
-                    document.getElementById('tipo_asesoria').value = data.data.tipo.nombre;
-                    document.getElementById('modo_asesoria').value = data.data.modo.nombre;
-                    document.getElementById('modo_asesoria_id').value = data.data.modo.id;
-                    document.getElementById('fecha').value = data.data.fecha;
-                    document.getElementById('hora').value = data.data.hora;
-                    document.getElementById('enlace').value = data.data.enlace;
-
-                    // Aquí puedes actualizar tu modal o la UI con los datos
+                .then(html => {
+                    document.getElementById('divDetalle').innerHTML = html; // insertar en el div
                 })
                 .catch(error => {
                     console.error('Ocurrió un error:', error);
+                    document.getElementById('divDetalle').innerHTML =
+                        '<div class="alert alert-danger">No se pudo cargar el detalle.</div>';
                 });
-        }
-
-        function showConfirmar() {
-            document.getElementById('modalConfirmarId').value = document.getElementById('asesoria_id').value;
-            document.getElementById('modalConfirmarName').innerText = document.getElementById('userName').innerText;
-            document.getElementById('modalConfirmarEmail').innerText = document.getElementById('userEmail').innerText;
-            document.getElementById('modalConfirmarDescripcion').innerText = document.getElementById('descripcion').value;
-            document.getElementById('modalConfirmarTipo').value = document.getElementById('tipo_asesoria').value;
-            document.getElementById('modalConfirmarModo').value = document.getElementById('modo_asesoria').value;
-            document.getElementById('modalConfirmarFecha').value = document.getElementById('fecha').value;
-            document.getElementById('modalConfirmarHora').value = document.getElementById('hora').value;
-            document.getElementById('modalConfirmarEnlace').value = document.getElementById('enlace').value;
-
-            const modoSelect = document.getElementById('modo_asesoria_id');
-            const divEnlace = document.getElementById('divEnlace');
-
-
-            if (modoSelect.value == '2') {
-                divEnlace.style.display = 'block';
-            } else {
-                divEnlace.style.display = 'none';
-            }
-
-
-        }
-
-        function showReagendar() {
-            document.getElementById('modalReagendarId').value = document.getElementById('asesoria_id').value;
-            document.getElementById('modalReagendarName').innerText = document.getElementById('userName').innerText;
-            document.getElementById('modalReagendarEmail').innerText = document.getElementById('userEmail').innerText;
-            document.getElementById('modalReagendarFecha').value = document.getElementById('fecha').value;
-            document.getElementById('modalReagendarHora').value = document.getElementById('hora').value;
-
-            const modoSelect = document.getElementById('modo_asesoria_id');
-            const divEnlace = document.getElementById('divEnlace');
-
-
-            if (modoSelect.value == '2') {
-                divEnlace.style.display = 'block';
-            } else {
-                divEnlace.style.display = 'none';
-            }
-
-
         }
     </script>
     <!-- End:: row-1 -->

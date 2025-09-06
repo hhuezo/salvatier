@@ -130,16 +130,17 @@ class AsesoriaController extends Controller
 
     public function show(string $id)
     {
-        $asesoria = Asesoria::with(['modo', 'estado', 'tipo', 'user'])->findOrFail($id);
+        $asesoria = Asesoria::with(['modo', 'estado', 'tipo', 'user', 'abogado_asignado'])->findOrFail($id);
 
         // Formatear fecha y hora
         $asesoria->fecha = $asesoria->fecha ? Carbon::parse($asesoria->fecha)->format('Y-m-d') : null;
         $asesoria->hora  = $asesoria->hora ? date('H:i', strtotime($asesoria->hora)) : null;
 
-        return response()->json([
-            'success' => true,
-            'data' => $asesoria
-        ]);
+        $abogados = User::whereHas('roles', function ($q) {
+            $q->where('id', 2);
+        })->get();
+
+        return view('administracion.asesoria.detalle', compact('asesoria','abogados'));
     }
 
 
