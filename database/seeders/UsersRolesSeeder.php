@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\administracion\Asesoria;
+use App\Models\administracion\AsesoriaHistorial;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Carbon\Carbon;
@@ -124,17 +126,31 @@ class UsersRolesSeeder extends Seeder
         ];
 
         for ($i = 0; $i < 15; $i++) {
-            DB::table('asesoria')->insert([
-                'descripcion' => $descripciones[$i],
-                'fecha' => Carbon::now()->subDays(rand(0, 30))->toDateString(),
-                'hora' => Carbon::createFromTime(rand(8, 18), rand(0, 59))->toTimeString(),
-                'estado_asesoria_id' => rand(1, 4), // suponiendo que tienes 3 estados
-                'modo_asesoria_id' => rand(1, 2),  // 1=Presencial, 2=Virtual
-                'tipo_asesoria_id' => 1,           // Legal
-                'user_id' => rand(22, 40),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            // Crear la asesoria principal
+            $asesoria = new Asesoria();
+            $asesoria->descripcion = $descripciones[$i];
+            $asesoria->fecha = Carbon::now()->subDays(rand(0, 30))->toDateString();
+            $asesoria->hora = Carbon::createFromTime(rand(8, 18), rand(0, 59))->toTimeString();
+            $asesoria->estado_asesoria_id = rand(1, 4);
+            $asesoria->modo_asesoria_id = rand(1, 2);
+            $asesoria->tipo_asesoria_id = 1; // Legal
+            $asesoria->user_id = rand(22, 40);
+            //$asesoria->abogado_asignado_id = rand(2, 21);
+            $asesoria->save();
+
+            // Crear el historial copiando los datos
+            $historial = new AsesoriaHistorial();
+            $historial->descripcion = $asesoria->descripcion;
+            $historial->fecha = $asesoria->fecha;
+            $historial->hora = $asesoria->hora;
+            $historial->enlace = null; // si no tienes dato inicial
+            $historial->asesoria_id = $asesoria->id;
+            $historial->estado_asesoria_id = $asesoria->estado_asesoria_id;
+            $historial->tipo_asesoria_id = $asesoria->tipo_asesoria_id;
+            $historial->modo_asesoria_id = $asesoria->modo_asesoria_id;
+            $historial->user_id = $asesoria->user_id;
+            //$historial->abogado_asignado_id = $asesoria->abogado_asignado_id;
+            $historial->save();
         }
 
 

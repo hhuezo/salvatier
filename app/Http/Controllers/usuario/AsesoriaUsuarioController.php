@@ -4,9 +4,11 @@ namespace App\Http\Controllers\usuario;
 
 use App\Http\Controllers\Controller;
 use App\Models\administracion\Asesoria;
+use App\Models\administracion\AsesoriaHistorial;
 use App\Models\administracion\ModoAsesoria;
 use App\Models\administracion\TipoAsesoria;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AsesoriaUsuarioController extends Controller
 {
@@ -47,6 +49,8 @@ class AsesoriaUsuarioController extends Controller
             'descripcion.max'    => 'La descripción no puede superar los 1000 caracteres.',
         ]);
 
+        DB::beginTransaction();
+
         try {
             $asesoria = new Asesoria();
             $asesoria->descripcion       = $validated['descripcion'] ?? null;
@@ -54,19 +58,37 @@ class AsesoriaUsuarioController extends Controller
             $asesoria->hora              = $validated['hora'];
             $asesoria->tipo_asesoria_id  = $validated['tipo_asesoria_id'];
             $asesoria->modo_asesoria_id  = $validated['modo_asesoria_id'];
-            $asesoria->estado_asesoria_id  = 1;
+            $asesoria->estado_asesoria_id = 1;
             $asesoria->user_id           = auth()->id();
             $asesoria->save();
 
+            $historial = new AsesoriaHistorial();
+            $historial->descripcion        = $asesoria->descripcion;
+            $historial->fecha              = $asesoria->fecha;
+            $historial->hora               = $asesoria->hora;
+            $historial->enlace             = null;
+            $historial->asesoria_id        = $asesoria->id;
+            $historial->estado_asesoria_id = $asesoria->estado_asesoria_id;
+            $historial->tipo_asesoria_id   = $asesoria->tipo_asesoria_id;
+            $historial->modo_asesoria_id   = $asesoria->modo_asesoria_id;
+            $historial->user_id            = $asesoria->user_id;
+            $historial->save();
+
+            DB::commit();
+
             return redirect()->back()->with('success', 'La asesoría ha sido programada exitosamente');
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['error' => 'Ocurrió un error al registrar la asesoría: ' . $e->getMessage()]);
+            DB::rollBack();
+            return redirect()->back()->withErrors([
+                'error' => 'Ocurrió un error al registrar la asesoría: ' . $e->getMessage()
+            ]);
         }
     }
 
+
     public function show(string $id)
     {
-        //
+        dd("");
     }
 
     public function agendadas()

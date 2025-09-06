@@ -67,6 +67,15 @@
                             <input type="time" class="form-control" id="modalConfirmarHora" readonly>
                         </div>
 
+                         <div class="col-md-12">
+                            <label class="form-label fw-bold">Abogado asignado:</label>
+                            <select class="form-select" name="abogado_asignado_id">
+                                @foreach ($abogados as $abogado)
+                                    <option value="{{$abogado->id}}">{{$abogado->name}} {{$abogado->lastname}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
                         <div class="col-md-12" id="divEnlace" style="display: none;">
                             <label class="form-label fw-bold">Adjuntar enlace de asesoria:</label>
                             <input type="text" class="form-control" name="enlace" id="modalConfirmarEnlace">

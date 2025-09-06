@@ -55,7 +55,7 @@
                         <table id="datatable-basic" class="table table-striped text-nowrap w-100">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>ID</th>
+                                    <th>#</th>
                                     <th>Usuario</th>
                                     <th>Descripción</th>
                                     <th>Fecha</th>

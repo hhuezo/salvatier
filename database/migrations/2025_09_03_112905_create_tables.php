@@ -47,6 +47,26 @@ return new class extends Migration
             $table->time('hora');
             $table->text('enlace')->nullable();
 
+            $table->foreignId('abogado_asignado_id')->nullable()->constrained('users')->restrictOnDelete()->restrictOnUpdate();
+            $table->foreignId('estado_asesoria_id')->constrained('estado_asesoria')->restrictOnDelete();
+            $table->foreignId('tipo_asesoria_id')->constrained('tipo_asesoria')->restrictOnDelete();
+            $table->foreignId('modo_asesoria_id')->constrained('modo_asesoria')->restrictOnDelete();
+            $table->foreignId('user_id')->constrained('users')->restrictOnDelete()->restrictOnUpdate();
+
+            $table->timestamps();
+        });
+
+
+        // Tabla historial asesoria
+        Schema::create('asesoria_historial', function (Blueprint $table) {
+            $table->id();
+            $table->text('descripcion');
+            $table->date('fecha');
+            $table->time('hora');
+            $table->text('enlace')->nullable();
+            $table->text('comentario');
+            $table->foreignId('abogado_asignado_id')->nullable()->constrained('users')->restrictOnDelete()->restrictOnUpdate();
+            $table->foreignId('asesoria_id')->constrained('asesoria')->restrictOnDelete();
             $table->foreignId('estado_asesoria_id')->constrained('estado_asesoria')->restrictOnDelete();
             $table->foreignId('tipo_asesoria_id')->constrained('tipo_asesoria')->restrictOnDelete();
             $table->foreignId('modo_asesoria_id')->constrained('modo_asesoria')->restrictOnDelete();
@@ -80,6 +100,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('asesoria_historial');
         Schema::dropIfExists('asesoria');
         Schema::dropIfExists('tipo_asesoria');
         Schema::dropIfExists('modo_asesoria');

@@ -55,21 +55,22 @@
                         <table id="datatable-basic" class="table table-striped text-nowrap w-100">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Usuario</th>
+                                    {{-- <th>#</th>
+                                    <th>Usuario</th> --}}
                                     <th>Descripción</th>
                                     <th>Fecha</th>
                                     <th>Hora</th>
                                     <th>Estado</th>
                                     <th>Tipo</th>
                                     <th>Modo</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($asesorias as $item)
                                     <tr>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->user->name ?? '' }} {{ $item->user->lastname ?? '' }}</td>
+                                        {{-- <td>{{ $item->id }}</td>
+                                        <td>{{ $item->user->name ?? '' }} {{ $item->user->lastname ?? '' }}</td> --}}
                                         <td>{{ $item->descripcion }}</td>
                                         <td>
                                             {{ $item->fecha ? \Carbon\Carbon::parse($item->fecha)->format('d/m/Y') : '-' }}
@@ -99,6 +100,12 @@
 
                                         <td>{{ $item->tipo->nombre ?? '-' }}</td>
                                         <td>{{ $item->modo->nombre ?? '-' }}</td>
+
+                                        <td>
+                                            <a href="{{ url('usuario/asesoria') }}/{{ $item->id }}">
+                                                <button class="btn btn-primary"><i class="bi bi-eye-fill"></i></button>
+                                            </a>
+                                        </td>
 
                                     </tr>
                                 @endforeach
@@ -224,8 +231,6 @@
 
 
         });
-
-
     </script>
     <!-- End:: row-1 -->
 @endsection
