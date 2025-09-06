@@ -8,6 +8,7 @@ use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
 use App\Http\Controllers\seguridad\UserController;
 use App\Http\Controllers\usuario\AsesoriaUsuarioController;
+use App\Http\Controllers\usuario\PagoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -48,7 +49,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('administracion/notificacion', NotificacionController::class);
 
 
-    Route::get('usuario/asesoria/agendadas', [AsesoriaUsuarioController::class,'agendadas']);
-    Route::get('usuario/sucursales', [AsesoriaUsuarioController::class,'sucursales']);
+    Route::get('usuario/asesoria/agendadas', [AsesoriaUsuarioController::class, 'agendadas']);
+    Route::get('usuario/sucursales', [AsesoriaUsuarioController::class, 'sucursales']);
     Route::resource('usuario/asesoria', AsesoriaUsuarioController::class);
+
+
+    Route::get('usuario/pago/create', [PagoController::class, 'create']);
 });
