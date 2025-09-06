@@ -64,7 +64,7 @@ return new class extends Migration
             $table->date('fecha');
             $table->time('hora');
             $table->text('enlace')->nullable();
-            $table->text('comentario');
+            $table->text('comentario')->nullable();
             $table->foreignId('abogado_asignado_id')->nullable()->constrained('users')->restrictOnDelete()->restrictOnUpdate();
             $table->foreignId('asesoria_id')->constrained('asesoria')->restrictOnDelete();
             $table->foreignId('estado_asesoria_id')->constrained('estado_asesoria')->restrictOnDelete();
