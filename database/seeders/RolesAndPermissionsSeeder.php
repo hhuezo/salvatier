@@ -56,6 +56,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'menu pagos',
             'dashboard',
             'inicio cliente',
+            'confirmar asesoria',
+            'reagendar asesoria',
         ];
 
         foreach ($permissions as $perm) {
@@ -76,6 +78,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'menu notificaciones',
             'menu gestionar de contenido',
             'dashboard',
+            'confirmar asesoria',
+            'reagendar asesoria',
         ]);
 
         $abogadoRole->syncPermissions([

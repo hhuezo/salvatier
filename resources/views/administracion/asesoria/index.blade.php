@@ -85,9 +85,10 @@
                                                 @php
                                                     $color = match ($item->estado->id) {
                                                         1 => 'danger',
-                                                        2 => 'info',
+                                                        2 => 'warning',
                                                         3 => 'success',
-                                                        4 => 'warning',
+                                                        4 => 'info',
+                                                        5 => 'secondary',
                                                         default => 'secondary',
                                                     };
                                                 @endphp

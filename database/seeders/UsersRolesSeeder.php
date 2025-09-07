@@ -92,6 +92,7 @@ class UsersRolesSeeder extends Seeder
 
         DB::table('estado_asesoria')->insert([
             ['nombre' => 'Pendiente', 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Pagada', 'created_at' => now(), 'updated_at' => now()],
             ['nombre' => 'Confirmada', 'created_at' => now(), 'updated_at' => now()],
             ['nombre' => 'Reagendada', 'created_at' => now(), 'updated_at' => now()],
             ['nombre' => 'Finalizada', 'created_at' => now(), 'updated_at' => now()],
@@ -131,7 +132,7 @@ class UsersRolesSeeder extends Seeder
             $asesoria->descripcion = $descripciones[$i];
             $asesoria->fecha = Carbon::now()->subDays(rand(0, 30))->toDateString();
             $asesoria->hora = Carbon::createFromTime(rand(8, 18), rand(0, 59))->toTimeString();
-            $asesoria->estado_asesoria_id = rand(1, 4);
+            $asesoria->estado_asesoria_id = rand(1, 5);
             $asesoria->modo_asesoria_id = rand(1, 2);
             $asesoria->tipo_asesoria_id = 1; // Legal
             $asesoria->user_id = rand(22, 40);
@@ -189,5 +190,11 @@ class UsersRolesSeeder extends Seeder
         }
 
         DB::table('notificacion')->insert($notificaciones);
+
+        DB::table('configuracion')->insert([
+            'costo_asesoria' => 60.00,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
     }
 }

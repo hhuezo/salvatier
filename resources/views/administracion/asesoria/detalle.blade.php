@@ -81,16 +81,23 @@
        </div>
 
        <div class="modal-footer">
-           @if ($asesoria->estado_asesoria_id == 2 || $asesoria->estado_asesoria_id == 3)
-               <button type="button" class="btn btn-primary d-block w-100 rounded-pill  btn-wave"
-                   data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal-reagendar">Reagendar</button>
-           @endif
-           @if ($asesoria->estado_asesoria_id == 1)
-               <button type="button" class="btn btn-primary d-block w-100 rounded-pill btn-wave" data-bs-toggle="modal"
-                   data-bs-target="#modal-confirmar">
-                   Confirmar
-               </button>
-           @endif
+           @can('reagendar asesoria')
+
+               @if ($asesoria->estado_asesoria_id == 3 || $asesoria->estado_asesoria_id == 4)
+                   <button type="button" class="btn btn-primary d-block w-100 rounded-pill  btn-wave"
+                       data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#modal-reagendar">Reagendar</button>
+               @endif
+
+           @endcan
+
+           @can('confirmar asesoria')
+               @if ($asesoria->estado_asesoria_id == 2)
+                   <button type="button" class="btn btn-primary d-block w-100 rounded-pill btn-wave" data-bs-toggle="modal"
+                       data-bs-target="#modal-confirmar">
+                       Confirmar
+                   </button>
+               @endif
+           @endcan
 
 
 
@@ -251,9 +258,10 @@
                            <!-- Fecha -->
                            <div class="col-md-12">
                                <label class="form-label fw-bold">Fecha asesoria:</label>
-                               <input type="hidden" name="id"
-                                   value="{{ $asesoria->id }}" class="form-control" required>
-                               <input type="date" name="fecha"  value="{{ $asesoria->fecha }}" class="form-control" required>
+                               <input type="hidden" name="id" value="{{ $asesoria->id }}"
+                                   class="form-control" required>
+                               <input type="date" name="fecha" value="{{ $asesoria->fecha }}"
+                                   class="form-control" required>
                                @error('fecha')
                                    <span class="text-danger small">{{ $message }}</span>
                                @enderror
@@ -262,7 +270,8 @@
                            <!-- Hora -->
                            <div class="col-md-12">
                                <label class="form-label fw-bold">Hora asesoria:</label>
-                               <input type="time" name="hora" value="{{ $asesoria->hora }}" class="form-control" required>
+                               <input type="time" name="hora" value="{{ $asesoria->hora }}"
+                                   class="form-control" required>
                                @error('hora')
                                    <span class="text-danger small">{{ $message }}</span>
                                @enderror

@@ -93,6 +93,13 @@ return new class extends Migration
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
         });
+
+
+        Schema::create('configuracion', function (Blueprint $table) {
+            $table->id();
+             $table->decimal('costo_asesoria', 8, 2);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -106,5 +113,6 @@ return new class extends Migration
         Schema::dropIfExists('modo_asesoria');
         Schema::dropIfExists('estado_asesoria');
         Schema::dropIfExists('notificacion');
+        Schema::dropIfExists('configuracion');
     }
 };
