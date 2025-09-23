@@ -37,6 +37,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('seguridad/role/update_permission', [RoleController::class, 'updatePermission']);
     Route::resource('seguridad/role', RoleController::class);
     Route::post('seguridad/user/update_password/{id}', [UserController::class, 'updatePassword']);
+    Route::get('seguridad/configuracion', [UserController::class, 'configuracion']);
+    Route::post('seguridad/configuracion', [UserController::class, 'configuracionStore']);
     Route::resource('seguridad/user', UserController::class);
 
 
@@ -51,8 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('usuario/asesoria/agendadas', [AsesoriaUsuarioController::class, 'agendadas']);
     Route::get('usuario/sucursales', [AsesoriaUsuarioController::class, 'sucursales']);
+    Route::post('usuario/asesoria/pago', [AsesoriaUsuarioController::class, 'pago']);
+    Route::get('usuario/asesoria/get_territorio/{id}', [AsesoriaUsuarioController::class, 'getTerritorio']);
     Route::resource('usuario/asesoria', AsesoriaUsuarioController::class);
-
-
-    Route::get('usuario/pago/create', [PagoController::class, 'create']);
 });

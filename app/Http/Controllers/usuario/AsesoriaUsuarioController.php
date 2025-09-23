@@ -7,8 +7,10 @@ use App\Models\administracion\Asesoria;
 use App\Models\administracion\AsesoriaHistorial;
 use App\Models\administracion\ModoAsesoria;
 use App\Models\administracion\TipoAsesoria;
+use App\Models\seguridad\Configuracion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class AsesoriaUsuarioController extends Controller
 {
@@ -88,8 +90,116 @@ class AsesoriaUsuarioController extends Controller
 
     public function show(string $id)
     {
-        dd("");
+        $asesoria = Asesoria::findOrFail($id);
+        $configuracion = Configuracion::first();
+
+        // Consumir API de regiones
+        $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
+
+        $regiones = [];
+        if ($response->successful()) {
+            $regiones = $response->json();
+        }
+
+        return view('usuario.asesoria.pago', compact('asesoria', 'configuracion', 'regiones'));
     }
+
+
+    public function getTerritorio(string $id)
+    {
+        $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
+
+        if ($response->successful()) {
+            $regiones = $response->json();
+
+            // Buscar la región con el id recibido
+            $region = collect($regiones)->firstWhere('id', $id);
+
+            if ($region && isset($region['territorios'])) {
+                return response()->json($region['territorios']);
+            }
+        }
+
+        return response()->json([], 404);
+    }
+
+
+    public function pago(Request $request)
+    {
+        // 1️⃣ Obtener datos del formulario
+        $numeroTarjeta   = $request->input('numero_tarjeta');
+        $cvv             = $request->input('cvv');
+        $fechaExp        = $request->input('fecha_expedicion'); // formato MM/AAAA o MM/YY
+        $paisId          = $request->input('pais');
+        $territorioId    = $request->input('territorio');
+
+        // Separar mes y año de la fecha de expiración
+        if (strpos($fechaExp, '/') !== false) {
+            list($mes, $anio) = explode('/', $fechaExp);
+            $mes  = intval($mes);
+            $anio = intval($anio);
+            if ($anio < 100) { // si es YY, convertir a YYYY
+                $anio += 2000;
+            }
+        } else {
+            // Default si no viene bien
+            $mes  = 1;
+            $anio = date('Y');
+        }
+
+        // 2️⃣ Llamar a la API de regiones
+        $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
+        $regiones = $response->json();
+
+        // 3️⃣ Buscar el país y territorio seleccionados
+        $paisNombre = null;
+        $territorioNombre = null;
+
+        foreach ($regiones as $region) {
+            if ($region['id'] === $paisId) {
+                $paisNombre = $region['nombre'];
+
+                foreach ($region['territorios'] as $territorio) {
+                    if ($territorio['id'] === $territorioId) {
+                        $territorioNombre = $territorio['nombre'];
+                        break 2; // salir de ambos foreach
+                    }
+                }
+            }
+        }
+
+
+
+        $configuracion = Configuracion::first();
+
+
+        // 4️⃣ Armar JSON final
+        $body = [
+            "tarjetaCreditoDebido" => [
+                "numeroTarjeta"   => $numeroTarjeta,
+                "cvv"             => $cvv,
+                "mesVencimiento"  => $mes,
+                "anioVencimiento" => $anio
+            ],
+            "monto"       => $configuracion->costo_asesoria ?? 0.00,
+            "urlRedirect" => url('usuario/asesoria/redir'),
+            "nombre"      => auth()->user()->name,
+            "apellido"    => auth()->user()->lastname,
+            "email"       => auth()->user()->email,
+            "ciudad"      => $territorioNombre ?? 'Desconocida',
+            "direccion"   => $territorioNombre ?? 'Desconocida',
+            "idPais"      => $paisId,
+            "idRegion"    => $territorioId,
+            "codigoPostal" => "10101",
+            "telefono"    => auth()->user()->phone,
+        ];
+
+        dd($body,$paisId);
+
+        // 5️⃣ Retornar el JSON (solo para pruebas, en producción harías POST a Wompi)
+        return response()->json($body);
+    }
+
 
     public function agendadas()
     {

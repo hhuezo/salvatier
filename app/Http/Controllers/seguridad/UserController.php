@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\seguridad;
 
 use App\Http\Controllers\Controller;
+use App\Models\seguridad\Configuracion;
 use App\Models\seguridad\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -176,9 +177,6 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         try {
@@ -228,4 +226,22 @@ class UserController extends Controller
             return back()->with('error', 'Hubo un error al actualizar la contraseña. Intenta nuevamente.');
         }
     }
+
+    public function configuracion() {
+
+        $configuracion = Configuracion::first();
+        return view('seguridad.usuario.configuracion', compact('configuracion'));
+    }
+
+    public function configuracionStore(Request $request) {
+
+        $configuracion = Configuracion::first();
+        $configuracion->costo_asesoria = $request->costo_asesoria;
+        $configuracion->save();
+
+
+         // Retornar con mensaje de éxito
+            return back()->with('success', 'Registro actualizado correctamente.');
+    }
+
 }

@@ -233,12 +233,17 @@
                             <li>
                                 <div class="dropdown-item text-center border-bottom">
                                     <span>
-                                        Mr.Henry
+                                        {{ auth()->user()->name }} {{ auth()->user()->lastname }}
                                     </span>
-                                    <span class="d-block fs-12 text-muted">UI/UX Designer</span>
+                                    <span
+                                        class="d-block fs-12 text-muted">{{ auth()->user()->getRoleNames()->implode(', ') }}</span>
                                 </div>
                             </li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
+                            <li><a class="dropdown-item d-flex align-items-center" href="#" data-bs-toggle="modal"
+                                    data-bs-target="#modal-configuracion"><i
+                                        class="bi bi-gear p-1 rounded-circle bg-primary-transparent ings me-2 fs-16"></i>Configuración</a>
+                            </li>
+                            {{-- <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
                                         class="fe fe-user p-1 rounded-circle bg-primary-transparent me-2 fs-16"></i>Profile</a>
                             </li>
                             <li><a class="dropdown-item d-flex align-items-center" href="mail.html"><i
@@ -248,13 +253,11 @@
                                         class="fe fe-database p-1 rounded-circle bg-primary-transparent klist me-2 fs-16"></i>File
                                     Manger<span class="badge bg-primary1 text-fixed-white ms-auto fs-9">2</span></a>
                             </li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="mail-settings.html"><i
-                                        class="fe fe-settings p-1 rounded-circle bg-primary-transparent ings me-2 fs-16"></i>Settings</a>
-                            </li>
+
                             <li class="border-top bg-light"><a class="dropdown-item d-flex align-items-center"
                                     href="chat.html"><i
                                         class="fe fe-help-circle p-1 rounded-circle bg-primary-transparent set me-2 fs-16"></i>Help</a>
-                            </li>
+                            </li> --}}
                             <li><a class="dropdown-item d-flex align-items-center" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
@@ -337,6 +340,15 @@
                                 </li>
                             @endcan
                             <!-- End::slide -->
+                        @endcan
+
+                        @can('menu usuarios')
+                            <li class="slide" id="li-usuario">
+                                <a href="{{ url('seguridad/configuracion') }}" class="side-menu__item">
+                                    <i class="bi bi-gear w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Configuración</span>
+                                </a>
+                            </li>
                         @endcan
 
 
@@ -496,6 +508,7 @@
     </div>
 
     <ul class="main-header-dropdown dropdown-menu dropdown-menu-end" data-popper-placement="none"></ul>
+
 
 
     <!-- Scroll To Top -->
