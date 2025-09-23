@@ -45,6 +45,28 @@
                 <form method="POST" action="{{ url('usuario/asesoria/pago') }}" id="formPago">
                     @csrf
 
+                    @if (count($errors) > 0)
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @if (session('success'))
+                        <script>
+                            toastr.success("{{ session('success') }}");
+                        </script>
+                    @endif
+
+                    @if (session('error'))
+                        <script>
+                            toastr.error("{{ session('error') }}");
+                        </script>
+                    @endif
+
                     <div class="card-body">
                         <p style="margin-top: -27px;">Complete los campos solicitados para realizar el pago</p>
 
@@ -54,38 +76,46 @@
                                 <select name="pais" id="pais" class="form-select select2">
                                     <option value="">Seleccione</option>
                                     @foreach ($regiones as $region)
-                                        <option value="{{ $region['id'] }}">{{ $region['nombre'] }}</option>
+                                        <option value="{{ $region['id'] }}"
+                                            {{ old('pais') == $region['id'] ? 'selected' : '' }}>
+                                            {{ $region['nombre'] }}
+                                        </option>
                                     @endforeach
                                 </select>
-                                <small class="text-danger" id="errorPais"></small>
+                                <small class="text-danger" id="errorPais">{{ $errors->first('pais') }}</small>
                             </div>
 
                             <div class="col-md-12">
                                 <label class="form-label">Territorio</label>
                                 <select name="territorio" id="territorio" class="form-select select2">
                                     <option value="">Seleccione</option>
+                                    @if (old('territorio'))
+                                        <option value="{{ old('territorio') }}" selected>
+                                            {{ old('territorio_nombre') ?? 'Seleccionado' }}</option>
+                                    @endif
                                 </select>
-                                <small class="text-danger" id="errorTerritorio"></small>
+                                <small class="text-danger" id="errorTerritorio">{{ $errors->first('territorio') }}</small>
                             </div>
 
                             <div class="col-md-12">
                                 <label class="form-label">Número de tarjeta</label>
                                 <input type="text" id="numero_tarjeta" name="numero_tarjeta" class="form-control"
-                                    required>
-                                <small class="text-danger" id="errorTarjeta"></small>
+                                    value="{{ old('numero_tarjeta') }}" required>
+                                <small class="text-danger" id="errorTarjeta">{{ $errors->first('numero_tarjeta') }}</small>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">Fecha de expiración</label>
                                 <input type="text" id="fecha_expedicion" name="fecha_expedicion" class="form-control"
-                                    required>
-                                <small class="text-danger" id="errorFecha"></small>
+                                    value="{{ old('fecha_expedicion') }}" required>
+                                <small class="text-danger" id="errorFecha">{{ $errors->first('fecha_expedicion') }}</small>
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label">CVV</label>
-                                <input type="password" id="cvv" name="cvv" class="form-control" required>
-                                <small class="text-danger" id="errorCVV"></small>
+                                <input type="password" id="cvv" name="cvv" class="form-control"
+                                    value="{{ old('cvv') }}" required>
+                                <small class="text-danger" id="errorCVV">{{ $errors->first('cvv') }}</small>
                             </div>
 
                             <div class="col-md-12">
@@ -94,8 +124,8 @@
                             <div class="col-md-12">
                                 <img src="{{ asset('assets/images/logo_tarjetas.png') }}" style="max-width:150px">
                             </div>
-
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -249,7 +279,7 @@
 
             const pais = document.getElementById('pais').value;
             const territorio = document.getElementById('territorio').value;
-            const numeroTarjeta = document.getElementById('numero_tarjeta').value.trim();
+            const numeroTarjeta = $("#numero_tarjeta").val().replace(/\s/g, ""); // quitar espacios
             const fechaExp = document.getElementById('fecha_expedicion').value.trim();
             const cvv = document.getElementById('cvv').value.trim();
 
@@ -266,17 +296,23 @@
             }
 
             if (!/^\d{13,19}$/.test(numeroTarjeta)) {
-                document.getElementById('errorTarjeta').textContent = 'Número de tarjeta inválido (13-19 dígitos).';
+                $("#errorTarjeta").text('Número de tarjeta inválido (13-19 dígitos).');
                 error = true;
+            } else {
+                $("#errorTarjeta").text('');
             }
 
-            if (!/^(0[1-9]|1[0-2])\/\d{4}$/.test(fechaExp)) {
-                document.getElementById('errorFecha').textContent = 'Formato fecha inválido (MM/AAAA).';
+            // Validación fecha MM/AA
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(fechaExp)) {
+                $("#errorFecha").text('Formato fecha inválido (MM/AA).');
                 error = true;
+            } else {
+                $("#errorFecha").text('');
             }
+
 
             if (!/^\d{3,4}$/.test(cvv)) {
-                document.getElementById('errorCVV').textContent = 'CVV inválido (3-4 dígitos).';
+                document.getElementById('errorCVV').textContent = 'CVV inválido (3 dígitos).';
                 error = true;
             }
 

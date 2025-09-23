@@ -182,7 +182,7 @@ class AsesoriaUsuarioController extends Controller
                 "anioVencimiento" => $anio
             ],
             "monto"       => $configuracion->costo_asesoria ?? 0.00,
-            "urlRedirect" => url('usuario/asesoria/redir'),
+            "urlRedirect" => url('usuario/asesoria/pago_finalizado'),
             "nombre"      => auth()->user()->name,
             "apellido"    => auth()->user()->lastname,
             "email"       => auth()->user()->email,
@@ -191,14 +191,38 @@ class AsesoriaUsuarioController extends Controller
             "idPais"      => $paisId,
             "idRegion"    => $territorioId,
             "codigoPostal" => "10101",
-            "telefono"    => auth()->user()->phone,
+            "telefono" => preg_replace('/\D/', '', auth()->user()->phone),
         ];
 
-        dd($body,$paisId);
+        //dd($body);
 
-        // 5️⃣ Retornar el JSON (solo para pruebas, en producción harías POST a Wompi)
-        return response()->json($body);
+        //try {
+            $response = Http::post('http://44.212.113.88:8081/api/wompi/transaccion/3ds', $body);
+            $data = $response->json();
+
+            // Si existe urlCompletarPago3Ds -> redireccionar
+            if (isset($data['urlCompletarPago3Ds'])) {
+                return redirect()->away($data['urlCompletarPago3Ds']);
+            }
+
+            // Si hay error en la transacción
+            if (isset($data['servicioError'])) {
+                return back()->with('error', implode(', ', $data['mensajes'] ?? ['Error desconocido']));
+            }
+
+            // Por seguridad, fallback
+            return back()->with('error', 'Error inesperado en la transacción.');
+        // } catch (\Exception $e) {
+        //     return back()->with('error', 'No se pudo conectar con el servicio de pagos: ' . $e->getMessage());
+        // }
+
     }
+
+    public function pago_finalizado(Request $request)
+    {
+        return view('usuario.asesoria.pago_finalizado');
+    }
+
 
 
     public function agendadas()
