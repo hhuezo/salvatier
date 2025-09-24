@@ -8,6 +8,7 @@ use App\Models\administracion\AsesoriaHistorial;
 use App\Models\administracion\ModoAsesoria;
 use App\Models\administracion\TipoAsesoria;
 use App\Models\seguridad\Configuracion;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
@@ -124,7 +125,7 @@ class AsesoriaUsuarioController extends Controller
     }
 
 
-    public function pago(Request $request)
+    public function pago(Request $request, $id)
     {
         // 1️⃣ Obtener datos del formulario
         $numeroTarjeta   = $request->input('numero_tarjeta');
@@ -196,12 +197,22 @@ class AsesoriaUsuarioController extends Controller
 
 
         try {
+
+            $asesoria = Asesoria::findOrFail($id);
+
             $response = Http::post('http://44.212.113.88:8081/api/wompi/transaccion/3ds', $body);
             $data = $response->json();
 
             // Si existe urlCompletarPago3Ds -> redireccionar
             if (isset($data['urlCompletarPago3Ds'])) {
+
                 //guardar registro de pago
+                $asesoria->costo_asesoria = $configuracion->costo_asesoria ?? 0.00;
+                $asesoria->estado_asesoria_id = 2;
+                $asesoria->fecha_pago = Carbon::now();
+                $asesoria->id_trasaccion = $data['idTransaccion'] ?? null;
+                $asesoria->save();
+
                 return redirect()->away($data['urlCompletarPago3Ds']);
             }
 
@@ -215,12 +226,12 @@ class AsesoriaUsuarioController extends Controller
         } catch (\Exception $e) {
             return back()->with('error', 'No se pudo conectar con el servicio de pagos: ' . $e->getMessage());
         }
-
     }
 
     public function pago_finalizado(Request $request)
     {
-        return view('usuario.asesoria.pago_finalizado');
+        $asesoria = Asesoria::where('id_trasaccion', $request->idTransaccion)->first();
+        return view('usuario.asesoria.pago_finalizado', compact('asesoria'));
     }
 
 

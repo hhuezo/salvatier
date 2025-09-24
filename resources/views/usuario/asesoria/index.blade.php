@@ -103,7 +103,7 @@
 
                                         <td>
                                             <a href="{{ url('usuario/asesoria') }}/{{ $item->id }}">
-                                                <button class="btn btn-primary"><i class="bi bi-eye-fill"></i></button>
+                                                <button class="btn btn-primary"><i class="bi bi-credit-card-2-back"></i></button>
                                             </a>
                                         </td>
 

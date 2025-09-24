@@ -42,7 +42,7 @@
                         Tarjeta de débito a crédito
                     </div>
                 </div>
-                <form method="POST" action="{{ url('usuario/asesoria/pago') }}" id="formPago">
+                <form method="POST" action="{{ url('usuario/asesoria/pago') }}/{{ $asesoria->id }}" id="formPago">
                     @csrf
 
                     @if (count($errors) > 0)
@@ -174,12 +174,15 @@
                 </div>
 
                 <div class="card-footer">
-                    <button type="button" id="btnPagar" class="btn btn-primary rounded-pill btn-wav w-100 mt-2"
-                        onclick="enviarFormulario()">
-                        Realizar pago
-                    </button>
-
-                    <button class="btn btn-outline-primary rounded-pill btn-wav w-100 mt-2">Cancelar</button>
+                    @if ($asesoria->estado_asesoria_id == 1)
+                        <button id="btnPagar" class="btn btn-primary rounded-pill btn-wav w-100 mt-2"
+                            onclick="enviarFormulario()">
+                            <span id="btnText">Realizar pago</span>
+                            <span id="btnSpinner" class="spinner-border spinner-border-sm ms-2" role="status"
+                                aria-hidden="true" style="display:none;"></span>
+                        </button>
+                    @endif
+                    <a href="{{ url('usuario/asesoria') }}" class="btn btn-outline-primary rounded-pill btn-wav w-100 mt-2">Cancelar</a>
                 </div>
 
             </div>
@@ -268,9 +271,13 @@
 
         function enviarFormulario() {
             const btn = document.getElementById('btnPagar');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
 
-            // Bloquear botón mientras se valida
+            // Bloquear botón y mostrar spinner
             btn.disabled = true;
+            btnText.textContent = "Procesando...";
+            btnSpinner.style.display = "inline-block";
 
             // Limpiar errores previos
             ['errorPais', 'errorTerritorio', 'errorTarjeta', 'errorFecha', 'errorCVV'].forEach(id => {
@@ -310,7 +317,6 @@
                 $("#errorFecha").text('');
             }
 
-
             if (!/^\d{3,4}$/.test(cvv)) {
                 document.getElementById('errorCVV').textContent = 'CVV inválido (3 dígitos).';
                 error = true;
@@ -322,6 +328,8 @@
             } else {
                 // Si hay error, desbloquear botón para corregir
                 btn.disabled = false;
+                btnText.textContent = "Realizar pago";
+                btnSpinner.style.display = "none";
             }
         }
     </script>

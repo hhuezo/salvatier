@@ -18,27 +18,32 @@
 
                 <div class="bg-light dark p-4 rounded mb-4">
                     <div style="text-align: center">
-                    <h3 class="h5 fw-medium mb-3">Detalles del pago</h3></div>
+                        <h3 class="h5 fw-medium mb-3">Detalles del pago</h3>
+                    </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span class="text-muted">Monto</span>
-                        <span class="fw-semibold">$125.00</span>
+                        <span class="fw-semibold">${{ $asesoria->costo_asesoria }}</span>
                     </div>
                     <div class="d-flex justify-content-between border-bottom py-2">
                         <span class="text-muted">Fecha</span>
-                        <span class="fw-semibold">15 de octubre de 2024</span>
+                        <span class="fw-semibold">
+                            {{ $asesoria->fecha_pago ? \Carbon\Carbon::parse($asesoria->fecha_pago)->format('d/m/Y H:i') : '-' }}
+                        </span>
                     </div>
-                    <div class="d-flex justify-content-between border-bottom py-2">
+                    {{-- <div class="d-flex justify-content-between border-bottom py-2">
                         <span class="text-muted">Método de pago</span>
                         <span class="fw-semibold">Tarjeta de crédito</span>
-                    </div>
+                    </div> --}}
                     <div class="d-flex justify-content-between pt-2">
                         <span class="text-muted">ID de transacción</span>
-                        <span class="fw-semibold">TXN1234567890</span>
+                        <span class="fw-semibold">{{ $asesoria->id_trasaccion }}</span>
                     </div>
                 </div>
 
                 <div class="d-grid gap-2 d-sm-flex justify-content-sm-between">
-                    <button class="btn btn-primary flex-fill">Volver al inicio</button>
+
+                    <a href="{{ url('usuario/asesoria') }}" class="btn btn-primary flex-fill">Volver al inicio</a>
+
                     {{-- <button class="btn btn-outline-secondary flex-fill">Ver historial de pedidos</button> --}}
                 </div>
 

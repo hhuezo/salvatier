@@ -21,6 +21,9 @@ class Asesoria extends Model
         'tipo_asesoria_id',
         'user_id',
         'abogado_asignado_id',
+        'costo_asesoria',
+        'fecha_pago',
+        'id_trasaccion',
     ];
 
     // Relaciones

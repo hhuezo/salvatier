@@ -42,10 +42,14 @@ return new class extends Migration
         // Tabla asesoria
         Schema::create('asesoria', function (Blueprint $table) {
             $table->id();
-            $table->text('descripcion'); // textarea
+            $table->text('descripcion');
             $table->date('fecha');
             $table->time('hora');
             $table->text('enlace')->nullable();
+
+            $table->decimal('costo_asesoria', 10, 2)->nullable();
+            $table->dateTime('fecha_pago')->nullable();
+            $table->string('id_trasaccion', 100)->nullable();
 
             $table->foreignId('abogado_asignado_id')->nullable()->constrained('users')->restrictOnDelete()->restrictOnUpdate();
             $table->foreignId('estado_asesoria_id')->constrained('estado_asesoria')->restrictOnDelete();
