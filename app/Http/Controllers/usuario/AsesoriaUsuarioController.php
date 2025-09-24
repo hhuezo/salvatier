@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AsesoriaUsuarioController extends Controller
 {
@@ -230,9 +231,22 @@ class AsesoriaUsuarioController extends Controller
 
     public function pago_finalizado(Request $request)
     {
-        $asesoria = Asesoria::where('id_trasaccion', $request->idTransaccion)->first();
-        return view('usuario.asesoria.pago_finalizado', compact('asesoria'));
+        try {
+            $asesoria = Asesoria::where('id_trasaccion', $request->idTransaccion)->first();
+
+            if (!$asesoria) {
+                // Opcional: redirigir o mostrar mensaje si no existe
+                return redirect()->back()->with('error', 'No se encontró la transacción.');
+            }
+
+            return view('usuario.asesoria.pago_finalizado', compact('asesoria'));
+        } catch (\Exception $e) {
+            // Manejo de error: log y redirección
+            Log::error('Error al buscar asesoria: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Ocurrió un error al procesar el pago.');
+        }
     }
+
 
 
 

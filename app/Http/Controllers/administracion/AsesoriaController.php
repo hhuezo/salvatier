@@ -44,7 +44,7 @@ class AsesoriaController extends Controller
         try {
             $asesoria = Asesoria::findOrFail($validated['id']);
             $asesoria->abogado_asignado_id = $validated['abogado_asignado_id'];
-            $asesoria->estado_asesoria_id = 2; // confirmado
+            $asesoria->estado_asesoria_id = 3; // confirmado
             if (!empty($validated['enlace'])) {
                 $asesoria->enlace = $validated['enlace'];
             }
@@ -94,7 +94,7 @@ class AsesoriaController extends Controller
 
         try {
             $asesoria = Asesoria::findOrFail($validated['id']);
-            $asesoria->estado_asesoria_id = 3; // reagendada
+            $asesoria->estado_asesoria_id = 4; // reagendada
             $asesoria->fecha = $validated['fecha'];
             $asesoria->hora  = $validated['hora'];
             $asesoria->save();

@@ -69,7 +69,7 @@ class PermissionController extends Controller
         ]);
 
         try {
-            $permission = Permission::findOrFail($id);
+            $permission = ModelPermission::findOrFail($id);
             $permission->name = $request->get('name');
             $permission->update();
 
