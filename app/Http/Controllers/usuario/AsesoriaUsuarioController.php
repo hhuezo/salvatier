@@ -176,7 +176,7 @@ class AsesoriaUsuarioController extends Controller
         // 4️⃣ Armar JSON final
         $body = [
             "tarjetaCreditoDebido" => [
-                "numeroTarjeta"   => $numeroTarjeta,
+                "numeroTarjeta" => str_replace(' ', '', $numeroTarjeta),
                 "cvv"             => $cvv,
                 "mesVencimiento"  => $mes,
                 "anioVencimiento" => $anio
@@ -194,14 +194,14 @@ class AsesoriaUsuarioController extends Controller
             "telefono" => preg_replace('/\D/', '', auth()->user()->phone),
         ];
 
-        //dd($body);
 
-        //try {
+        try {
             $response = Http::post('http://44.212.113.88:8081/api/wompi/transaccion/3ds', $body);
             $data = $response->json();
 
             // Si existe urlCompletarPago3Ds -> redireccionar
             if (isset($data['urlCompletarPago3Ds'])) {
+                //guardar registro de pago
                 return redirect()->away($data['urlCompletarPago3Ds']);
             }
 
@@ -212,9 +212,9 @@ class AsesoriaUsuarioController extends Controller
 
             // Por seguridad, fallback
             return back()->with('error', 'Error inesperado en la transacción.');
-        // } catch (\Exception $e) {
-        //     return back()->with('error', 'No se pudo conectar con el servicio de pagos: ' . $e->getMessage());
-        // }
+        } catch (\Exception $e) {
+            return back()->with('error', 'No se pudo conectar con el servicio de pagos: ' . $e->getMessage());
+        }
 
     }
 

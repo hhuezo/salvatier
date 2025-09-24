@@ -39,6 +39,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $permissions = [
             'menu seguridad',
+            'menu configuracion',
             'menu administracion',
             'menu permisos',
             'menu usuarios',
@@ -67,6 +68,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Asignar permisos a cada rol
         $adminRole->syncPermissions([
             'menu seguridad',
+            'menu configuracion',
             'menu administracion',
             'menu permisos',
             'menu usuarios',
