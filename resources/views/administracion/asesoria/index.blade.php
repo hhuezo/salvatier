@@ -63,6 +63,9 @@
                                     <th>Estado</th>
                                     <th>Tipo</th>
                                     <th>Modo</th>
+                                    <th>Costo asesoria</th>
+                                    <th>Fecha pago</th>
+                                    <th>Id transacción</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
@@ -79,7 +82,6 @@
                                         <td>
                                             {{ $item->hora ? \Carbon\Carbon::parse($item->hora)->format('H:i') : '-' }}
                                         </td>
-
                                         <td>
                                             @if ($item->estado)
                                                 @php
@@ -101,11 +103,18 @@
 
                                         <td>{{ $item->tipo->nombre ?? '-' }}</td>
                                         <td>{{ $item->modo->nombre ?? '-' }}</td>
+                                        <td>{{ $item->costo_asesoria ? '$' . $item->costo_asesoria : '' }}</td>
+                                        <td>
+                                            {{ $item->fecha_pago ? \Carbon\Carbon::parse($item->fecha_pago)->format('d/m/Y') : '-' }}
+                                        </td>
+                                         <td>{{ $item->id_trasaccion }}</td>
                                         <td style="text-align: center">
                                             <button class="btn btn-sm btn-dark btn-wave"
                                                 onclick="getDetalle({{ $item->id }})">
                                                 &nbsp;Ver&nbsp;
                                             </button>
+
+
 
                                         </td>
                                     </tr>

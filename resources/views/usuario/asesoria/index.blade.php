@@ -102,9 +102,12 @@
                                         <td>{{ $item->modo->nombre ?? '-' }}</td>
 
                                         <td>
-                                            <a href="{{ url('usuario/asesoria') }}/{{ $item->id }}">
-                                                <button class="btn btn-primary"><i class="bi bi-credit-card-2-back"></i></button>
-                                            </a>
+                                            @if ($item->estado_asesoria_id == 1)
+                                                <a href="{{ url('usuario/asesoria') }}/{{ $item->id }}">
+                                                    <button class="btn btn-primary"><i
+                                                            class="bi bi-credit-card-2-back"></i></button>
+                                                </a>
+                                            @endif
                                         </td>
 
                                     </tr>

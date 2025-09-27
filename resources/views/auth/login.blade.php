@@ -50,8 +50,8 @@
                             <div class="card-body p-5">
                                 <div class="row gy-3">
                                     <div class="col-xl-12" style="text-align: center">
-                                        <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 260px" alt="Logo Salvatier"
-                                            class="login-logo">
+                                        <img src="{{ asset('assets/images/logo.png') }}" style="max-width: 260px"
+                                            alt="Logo Salvatier" class="login-logo">
 
                                     </div>
                                     <div class="col-xl-12">&ensp; </div>
@@ -91,6 +91,11 @@
                                 <div class="d-grid mt-4">
                                     <button type="submit"
                                         class="btn btn-primary btn-lg rounded-pill btn-wave">Ingresar</button>
+                                </div>
+
+                                <div class="d-grid mt-4">
+                                    <a href="{{url('register')}}" type="button"
+                                        class="btn btn-outline-primary btn-lg rounded-pill btn-wave">Crear cuenta</a>
                                 </div>
 
                             </div>
