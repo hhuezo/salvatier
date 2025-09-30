@@ -21,7 +21,7 @@ class AsesoriaUsuarioController extends Controller
     {
         $asesorias = Asesoria::with(['estado', 'modo', 'tipo', 'user'])->where('user_id', auth()->user()->id)->get();
         $tipos = TipoAsesoria::get();
-        $modos = ModoAsesoria::get();
+        $modos = ModoAsesoria::where('activo', 1)->get();
 
         return view('usuario.asesoria.index', compact('asesorias', 'tipos', 'modos'));
     }
@@ -80,7 +80,7 @@ class AsesoriaUsuarioController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'La asesoría ha sido programada exitosamente');
+            return redirect('usuario/asesoria/' . $asesoria->id)->with('success', 'La asesoría ha sido programada exitosamente');
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->withErrors([
@@ -93,7 +93,6 @@ class AsesoriaUsuarioController extends Controller
     public function show(string $id)
     {
         $asesoria = Asesoria::findOrFail($id);
-        $configuracion = Configuracion::first();
 
         // Consumir API de regiones
         $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
@@ -103,7 +102,7 @@ class AsesoriaUsuarioController extends Controller
             $regiones = $response->json();
         }
 
-        return view('usuario.asesoria.pago', compact('asesoria', 'configuracion', 'regiones'));
+        return view('usuario.asesoria.pago', compact('asesoria', 'regiones'));
     }
 
 
@@ -170,9 +169,7 @@ class AsesoriaUsuarioController extends Controller
             }
         }
 
-
-
-        $configuracion = Configuracion::first();
+        $asesoria = Asesoria::findOrFail($id);
 
 
         // 4️⃣ Armar JSON final
@@ -183,7 +180,7 @@ class AsesoriaUsuarioController extends Controller
                 "mesVencimiento"  => $mes,
                 "anioVencimiento" => $anio
             ],
-            "monto"       => $configuracion->costo_asesoria ?? 0.00,
+            "monto"       => $asesoria->modo->costo ?? 0.00,
             "urlRedirect" => url('usuario/asesoria/pago_finalizado'),
             "nombre"      => auth()->user()->name,
             "apellido"    => auth()->user()->lastname,
@@ -208,7 +205,7 @@ class AsesoriaUsuarioController extends Controller
             if (isset($data['urlCompletarPago3Ds'])) {
 
                 //guardar registro de pago
-                $asesoria->costo_asesoria = $configuracion->costo_asesoria ?? 0.00;
+                $asesoria->costo_asesoria = $asesoria->modo->costo ?? 0.00;
                 $asesoria->estado_asesoria_id = 2;
                 $asesoria->fecha_pago = Carbon::now();
                 $asesoria->id_trasaccion = $data['idTransaccion'] ?? null;
@@ -219,7 +216,9 @@ class AsesoriaUsuarioController extends Controller
 
             // Si hay error en la transacción
             if (isset($data['servicioError'])) {
-                return back()->with('error', implode(', ', $data['mensajes'] ?? ['Error desconocido']));
+                $errorMessage = implode(', ', $data['mensajes'] ?? ['Error desconocido en el servicio']);
+
+                return back()->withErrors(['servicio_general' => $errorMessage]);
             }
 
             // Por seguridad, fallback

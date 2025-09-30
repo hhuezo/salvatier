@@ -141,7 +141,7 @@
                 <div class="card-body" style="text-align: center">
                     <div class="alert alert-success rounded-pill d-flex justify-content-between">
                         <span><strong>Precio a cancelar</strong></span>
-                        <strong>${{ $configuracion->costo_asesoria }}</strong>
+                        <strong>${{ $asesoria->modo->costo ?? '0.00' }}</strong>
                     </div>
 
                     <!-- Vista previa con la imagen de la tarjeta -->
