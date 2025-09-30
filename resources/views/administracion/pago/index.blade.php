@@ -20,7 +20,7 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
-                        Listado de operadores
+                        Listado de abogados
                     </div>
                     <div class="prism-toggle">
                         <button class="btn btn-primary" data-bs-toggle="modal"
@@ -65,7 +65,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($operadores as $item)
+                                @foreach ($abogados as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->name }}</td>
@@ -90,8 +90,6 @@
                                             </button>
                                         </td>
                                     </tr>
-
-                                    @include('administracion.operador.edit')
                                 @endforeach
                             </tbody>
                         </table>
@@ -105,14 +103,14 @@
     </div>
 
 
-    <div class="modal fade" id="modal-create" tabindex="-1" aria-labelledby="modalCreateAbogadoLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="modal-create" tabindex="-1" aria-labelledby="modalCreateAbogadoLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="modalCreateAbogadoLabel">Agregar operador</h6>
+                    <h6 class="modal-title" id="modalCreateAbogadoLabel">Agregar abogado</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <form method="POST" action="{{ url('administracion/operador') }}">
+                <form method="POST" action="{{ url('administracion/abogado') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="row gy-3">
@@ -159,7 +157,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
 
@@ -172,7 +170,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-operador');
+            expandMenuAndHighlightOption('li-abogado');
 
             $('#datatable-basic').DataTable({
                 language: {

@@ -364,14 +364,6 @@
                             </li>
                         @endcan
 
-                        @can('menu operadores')
-                            <li class="slide" id="li-operador">
-                                <a href="{{ url('administracion/operador') }}" class="side-menu__item">
-                                    <i class="bi bi-headphones w-6 h-6 side-menu__icon"></i>
-                                    <span class="side-menu__label">Operadores</span>
-                                </a>
-                            </li>
-                        @endcan
 
                         @can('menu gestionar asesorias')
                             <li class="slide" id="li-asesoria">
