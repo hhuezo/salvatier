@@ -32,9 +32,9 @@ class CatalogosSeeder extends Seeder
 
         DB::table('tipo_pago')->insert([
             ['nombre' => 'Sin detalle de pago', 'activo' => 1],
-            ['nombre' => 'Mensual', 'activo' => 1],
             ['nombre' => 'Ultimo dia de mes', 'activo' => 1],
-            ['nombre' => 'Quincenal', 'activo' => 1],
+            ['nombre' => 'Mensual', 'activo' => 1],
+            //['nombre' => 'Quincenal', 'activo' => 1],
             ['nombre' => 'Trimestral', 'activo' => 1],
             ['nombre' => 'Al finalizar', 'activo' => 1],
             ['nombre' => 'Según avance', 'activo' => 1],

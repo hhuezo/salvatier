@@ -4,11 +4,11 @@ use App\Http\Controllers\administracion\AbogadoController;
 use App\Http\Controllers\administracion\AsesoriaController;
 use App\Http\Controllers\Administracion\ModoAsesoriaController;
 use App\Http\Controllers\administracion\NotificacionController;
+use App\Http\Controllers\administracion\PagoController;
 use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
 use App\Http\Controllers\seguridad\UserController;
 use App\Http\Controllers\usuario\AsesoriaUsuarioController;
-use App\Http\Controllers\usuario\PagoController;
 use Illuminate\Support\Facades\Route;
 
 /*
