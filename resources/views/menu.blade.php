@@ -375,8 +375,8 @@
                         @endcan
 
                         @can('menu gestion de pagos')
-                            <li class="slide">
-                                <a href="widgets.html" class="side-menu__item">
+                            <li class="slide" id="li-pago">
+                                <a href="{{ route('pago.index') }}" class="side-menu__item">
                                     <i class="bi bi-currency-dollar w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Gestion de pagos</span>
                                 </a>

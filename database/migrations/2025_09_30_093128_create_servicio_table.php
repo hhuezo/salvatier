@@ -13,6 +13,7 @@ return new class extends Migration
             $table->date('fecha_contrato');
             $table->unsignedBigInteger('empresa_id');
             $table->unsignedBigInteger('oficina_id');
+            $table->unsignedBigInteger('tipo_pago_id');
             $table->decimal('monto_contratado', 15, 2);
             $table->decimal('primer_abono', 15, 2)->nullable();
             $table->decimal('pago_minimo', 15, 2)->nullable();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->foreign('empresa_id')->references('id')->on('empresa')->onDelete('restrict');
             $table->foreign('oficina_id')->references('id')->on('oficina')->onDelete('restrict');
             $table->foreign('usuario_creador')->references('id')->on('users')->onDelete('restrict');
+            $table->foreign('tipo_pago_id')->references('id')->on('tipo_pago')->onDelete('restrict');
         });
     }
 

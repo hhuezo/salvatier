@@ -16,6 +16,7 @@ class Servicio extends Model
         'fecha_contrato',
         'empresa_id',
         'oficina_id',
+        'tipo_pago_id',
         'monto_contratado',
         'primer_abono',
         'pago_minimo',
@@ -33,5 +34,10 @@ class Servicio extends Model
     public function oficina()
     {
         return $this->belongsTo(Oficina::class, 'oficina_id');
+    }
+
+     public function tipo_pago()
+    {
+        return $this->belongsTo(TipoPago::class, 'tipo_pago_id');
     }
 }

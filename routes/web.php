@@ -48,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('administracion/notificacion', NotificacionController::class);
     Route::resource('administracion/modo_asesoria', ModoAsesoriaController::class);
 
+    Route::get('administracion/pago/previsualizacion', [PagoController::class, 'previsualizacion'])->name('pago.previsualizacion');
+    Route::post('administracion/servicio_store', [PagoController::class, 'servicio_store'])->name('servicio.store');
     Route::resource('administracion/pago', PagoController::class);
 
 
