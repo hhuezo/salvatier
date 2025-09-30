@@ -53,42 +53,6 @@ class UsersRolesSeeder extends Seeder
             $user->assignRole($rolAbogado);
         }
 
-        // 20 Operadores
-        $operadores = [
-            ['name' => 'Diego', 'lastname' => 'Lopez', 'email' => 'diego.lopez@example.com'],
-            ['name' => 'Carla', 'lastname' => 'Gomez', 'email' => 'carla.gomez@example.com'],
-            ['name' => 'Esteban', 'lastname' => 'Martinez', 'email' => 'esteban.martinez@example.com'],
-            ['name' => 'Fernanda', 'lastname' => 'Diaz', 'email' => 'fernanda.diaz@example.com'],
-            ['name' => 'Alberto', 'lastname' => 'Ramirez', 'email' => 'alberto.ramirez@example.com'],
-            ['name' => 'Natalia', 'lastname' => 'Santos', 'email' => 'natalia.santos@example.com'],
-            ['name' => 'Javier', 'lastname' => 'Torres', 'email' => 'javier.torres@example.com'],
-            ['name' => 'Adriana', 'lastname' => 'Vargas', 'email' => 'adriana.vargas@example.com'],
-            ['name' => 'Santiago', 'lastname' => 'Flores', 'email' => 'santiago.flores@example.com'],
-            ['name' => 'Camila', 'lastname' => 'Rojas', 'email' => 'camila.rojas@example.com'],
-            ['name' => 'Pablo', 'lastname' => 'Castro', 'email' => 'pablo.castro@example.com'],
-            ['name' => 'Daniela', 'lastname' => 'Mendez', 'email' => 'daniela.mendez@example.com'],
-            ['name' => 'Ricardo', 'lastname' => 'Herrera', 'email' => 'ricardo.herrera@example.com'],
-            ['name' => 'Isabel', 'lastname' => 'Silva', 'email' => 'isabel.silva@example.com'],
-            ['name' => 'Andrés', 'lastname' => 'Guerra', 'email' => 'andres.guerra@example.com'],
-            ['name' => 'Carolina', 'lastname' => 'Navarro', 'email' => 'carolina.navarro@example.com'],
-            ['name' => 'Fernando', 'lastname' => 'Cruz', 'email' => 'fernando.cruz@example.com'],
-            ['name' => 'Gabriela', 'lastname' => 'Ramos', 'email' => 'gabriela.ramos@example.com'],
-            ['name' => 'Juan', 'lastname' => 'Ortiz', 'email' => 'juan.ortiz@example.com'],
-            ['name' => 'Paula', 'lastname' => 'Perez', 'email' => 'paula.perez@example.com'],
-        ];
-
-        foreach ($operadores as $item) {
-            $user = User::create([
-                'name' => $item['name'],
-                'lastname' => $item['lastname'],
-                'email' => $item['email'],
-                'password' => Hash::make('password123'),
-                'active' => 1,
-            ]);
-            $user->assignRole($rolOperador);
-        }
-
-
 
         DB::table('estado_asesoria')->insert([
             ['nombre' => 'Pendiente', 'created_at' => now(), 'updated_at' => now()],
@@ -99,8 +63,9 @@ class UsersRolesSeeder extends Seeder
         ]);
 
         DB::table('modo_asesoria')->insert([
-            ['nombre' => 'Presencial', 'created_at' => now(), 'updated_at' => now()],
-            ['nombre' => 'Virtual', 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Presencial', 'costo' => 0.01, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Virtual', 'costo' => 0.02, 'created_at' => now(), 'updated_at' => now()],
+            ['nombre' => 'Empresarial', 'costo' => 0.03, 'created_at' => now(), 'updated_at' => now()],
         ]);
 
 
@@ -108,55 +73,55 @@ class UsersRolesSeeder extends Seeder
             ['nombre' => 'Legal', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        $descripciones = [
-            'Asesoría sobre contrato de arrendamiento.',
-            'Consulta sobre derechos laborales.',
-            'Orientación en proceso de divorcio.',
-            'Asesoría sobre herencia y testamentos.',
-            'Consulta sobre impuestos y tributos.',
-            'Asesoría en compra-venta de inmuebles.',
-            'Consulta sobre constitución de sociedad.',
-            'Asesoría en derecho mercantil.',
-            'Consulta sobre acoso laboral.',
-            'Asesoría en derecho penal.',
-            'Orientación en adopción.',
-            'Consulta sobre pensiones alimenticias.',
-            'Asesoría en propiedad intelectual.',
-            'Consulta sobre accidentes de tránsito.',
-            'Orientación en contratos de servicios.'
-        ];
+        // $descripciones = [
+        //     'Asesoría sobre contrato de arrendamiento.',
+        //     'Consulta sobre derechos laborales.',
+        //     'Orientación en proceso de divorcio.',
+        //     'Asesoría sobre herencia y testamentos.',
+        //     'Consulta sobre impuestos y tributos.',
+        //     'Asesoría en compra-venta de inmuebles.',
+        //     'Consulta sobre constitución de sociedad.',
+        //     'Asesoría en derecho mercantil.',
+        //     'Consulta sobre acoso laboral.',
+        //     'Asesoría en derecho penal.',
+        //     'Orientación en adopción.',
+        //     'Consulta sobre pensiones alimenticias.',
+        //     'Asesoría en propiedad intelectual.',
+        //     'Consulta sobre accidentes de tránsito.',
+        //     'Orientación en contratos de servicios.'
+        // ];
 
-        for ($i = 0; $i < 15; $i++) {
-            // Crear la asesoria principal
-            $asesoria = new Asesoria();
-            $asesoria->descripcion = $descripciones[$i];
-            $asesoria->fecha = Carbon::now()->subDays(rand(0, 30))->toDateString();
-            $asesoria->hora = Carbon::createFromTime(rand(8, 18), rand(0, 59))->toTimeString();
-            $asesoria->estado_asesoria_id = rand(1, 5);
-            $asesoria->modo_asesoria_id = rand(1, 2);
-            $asesoria->tipo_asesoria_id = 1; // Legal
-            $asesoria->user_id = rand(22, 40);
-            //$asesoria->abogado_asignado_id = rand(2, 21);
-            $asesoria->save();
+        // for ($i = 0; $i < 15; $i++) {
+        //     // Crear la asesoria principal
+        //     $asesoria = new Asesoria();
+        //     $asesoria->descripcion = $descripciones[$i];
+        //     $asesoria->fecha = Carbon::now()->subDays(rand(0, 30))->toDateString();
+        //     $asesoria->hora = Carbon::createFromTime(rand(8, 18), rand(0, 59))->toTimeString();
+        //     $asesoria->estado_asesoria_id = rand(1, 5);
+        //     $asesoria->modo_asesoria_id = rand(1, 2);
+        //     $asesoria->tipo_asesoria_id = 1; // Legal
+        //     $asesoria->user_id = rand(22, 40);
+        //     //$asesoria->abogado_asignado_id = rand(2, 21);
+        //     $asesoria->save();
 
-            // Crear el historial copiando los datos
-            $historial = new AsesoriaHistorial();
-            $historial->descripcion = $asesoria->descripcion;
-            $historial->fecha = $asesoria->fecha;
-            $historial->hora = $asesoria->hora;
-            $historial->enlace = null; // si no tienes dato inicial
-            $historial->asesoria_id = $asesoria->id;
-            $historial->estado_asesoria_id = $asesoria->estado_asesoria_id;
-            $historial->tipo_asesoria_id = $asesoria->tipo_asesoria_id;
-            $historial->modo_asesoria_id = $asesoria->modo_asesoria_id;
-            $historial->user_id = $asesoria->user_id;
-            //$historial->abogado_asignado_id = $asesoria->abogado_asignado_id;
-            $historial->save();
-        }
+        //     // Crear el historial copiando los datos
+        //     $historial = new AsesoriaHistorial();
+        //     $historial->descripcion = $asesoria->descripcion;
+        //     $historial->fecha = $asesoria->fecha;
+        //     $historial->hora = $asesoria->hora;
+        //     $historial->enlace = null; // si no tienes dato inicial
+        //     $historial->asesoria_id = $asesoria->id;
+        //     $historial->estado_asesoria_id = $asesoria->estado_asesoria_id;
+        //     $historial->tipo_asesoria_id = $asesoria->tipo_asesoria_id;
+        //     $historial->modo_asesoria_id = $asesoria->modo_asesoria_id;
+        //     $historial->user_id = $asesoria->user_id;
+        //     //$historial->abogado_asignado_id = $asesoria->abogado_asignado_id;
+        //     $historial->save();
+        // }
 
 
         //notificaciones
-        $mensajes = [
+       /* $mensajes = [
             "Su asesoría programada ha sido confirmada.",
             "Tiene una nueva notificación pendiente de revisión.",
             "Se ha generado un reporte de su última asesoría.",
@@ -189,12 +154,6 @@ class UsersRolesSeeder extends Seeder
             ];
         }
 
-        DB::table('notificacion')->insert($notificaciones);
-
-        DB::table('configuracion')->insert([
-            'costo_asesoria' => 60.00,
-            'created_at' => now(),
-            'updated_at' => now()
-        ]);
+        DB::table('notificacion')->insert($notificaciones);*/
     }
 }

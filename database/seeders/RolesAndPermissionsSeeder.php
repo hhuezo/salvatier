@@ -18,7 +18,6 @@ class RolesAndPermissionsSeeder extends Seeder
         // Crear roles
         $adminRole   = Role::firstOrCreate(['name' => 'administrador']);
         $abogadoRole = Role::firstOrCreate(['name' => 'abogado']);
-        $operadorRole = Role::firstOrCreate(['name' => 'operador']);
         $clienteRole = Role::firstOrCreate(['name' => 'cliente']);
 
         // Crear un usuario de ejemplo para el administrador
@@ -94,15 +93,6 @@ class RolesAndPermissionsSeeder extends Seeder
             'dashboard',
         ]);
 
-        $operadorRole->syncPermissions([
-            'menu abogados',
-            'menu operadores',
-            'menu gestionar asesorias',
-            'menu gestion de pagos',
-            'menu notificaciones',
-            'menu gestionar de contenido',
-            'dashboard',
-        ]);
 
         $clienteRole->syncPermissions([
             'menu sucursales',

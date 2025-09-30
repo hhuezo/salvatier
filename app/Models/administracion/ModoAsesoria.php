@@ -13,7 +13,7 @@ class ModoAsesoria extends Model
 
     // Campos que se pueden asignar masivamente
     protected $fillable = [
-        'nombre',
+        'nombre','costo','activo',
     ];
 
     // Relación con Asesoria (si quieres)

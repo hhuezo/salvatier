@@ -16,7 +16,7 @@
 
     <!-- Start:: row-1 -->
     <div class="row">
-        <div class="col-xl-9">
+        <div class="col-xl-12">
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">

@@ -63,6 +63,9 @@
                                     <th>Estado</th>
                                     <th>Tipo</th>
                                     <th>Modo</th>
+                                    <th>Costo asesoria</th>
+                                    <th>Fecha pago</th>
+                                    <th>Id transacción</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -101,6 +104,12 @@
                                         <td>{{ $item->tipo->nombre ?? '-' }}</td>
                                         <td>{{ $item->modo->nombre ?? '-' }}</td>
 
+
+                                        <td>{{ $item->costo_asesoria ? '$' . $item->costo_asesoria : '' }}</td>
+                                        <td>
+                                            {{ $item->fecha_pago ? \Carbon\Carbon::parse($item->fecha_pago)->format('d/m/Y') : '-' }}
+                                        </td>
+                                        <td>{{ $item->id_trasaccion }}</td>
                                         <td>
                                             @if ($item->estado_asesoria_id == 1)
                                                 <a href="{{ url('usuario/asesoria') }}/{{ $item->id }}">
@@ -109,6 +118,7 @@
                                                 </a>
                                             @endif
                                         </td>
+
 
                                     </tr>
                                 @endforeach

@@ -24,7 +24,9 @@ return new class extends Migration
         // Tabla tipo_asesoria
         Schema::create('modo_asesoria', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100); // Ej: Presencial, Virtual
+            $table->string('nombre', 100);
+            $table->decimal('costo', 8, 2);
+            $table->boolean('activo')->default(true);
             $table->timestamps();
         });
 
@@ -34,7 +36,7 @@ return new class extends Migration
         // Tabla tipo_asesoria
         Schema::create('tipo_asesoria', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre', 100); // Ej: Presencial, Virtual
+            $table->string('nombre', 100);
             $table->timestamps();
         });
 
@@ -96,13 +98,6 @@ return new class extends Migration
                 ->on('users')
                 ->restrictOnDelete()
                 ->restrictOnUpdate();
-        });
-
-
-        Schema::create('configuracion', function (Blueprint $table) {
-            $table->id();
-             $table->decimal('costo_asesoria', 8, 2);
-            $table->timestamps();
         });
     }
 

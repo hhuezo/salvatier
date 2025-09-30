@@ -239,11 +239,11 @@
                                         class="d-block fs-12 text-muted">{{ auth()->user()->getRoleNames()->implode(', ') }}</span>
                                 </div>
                             </li>
-                            <li><a class="dropdown-item d-flex align-items-center" href="#" data-bs-toggle="modal"
+                            {{-- <li><a class="dropdown-item d-flex align-items-center" href="#" data-bs-toggle="modal"
                                     data-bs-target="#modal-configuracion"><i
-                                        class="bi bi-gear p-1 rounded-circle bg-primary-transparent ings me-2 fs-16"></i>Configuración</a>
+                                        class="bi bi-gear p-1 rounded-circle bg-primary-transparent ings me-2 fs-16"></i>Modo </a>
                             </li>
-                            {{-- <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
+                            <li><a class="dropdown-item d-flex align-items-center" href="profile.html"><i
                                         class="fe fe-user p-1 rounded-circle bg-primary-transparent me-2 fs-16"></i>Profile</a>
                             </li>
                             <li><a class="dropdown-item d-flex align-items-center" href="mail.html"><i
@@ -344,9 +344,9 @@
 
                         @can('menu usuarios')
                             <li class="slide" id="li-usuario">
-                                <a href="{{ url('seguridad/configuracion') }}" class="side-menu__item">
+                                <a href="{{ route('modo_asesoria.index') }}" class="side-menu__item">
                                     <i class="bi bi-gear w-6 h-6 side-menu__icon"></i>
-                                    <span class="side-menu__label">Configuración</span>
+                                    <span class="side-menu__label">Tipos asesoria</span>
                                 </a>
                             </li>
                         @endcan

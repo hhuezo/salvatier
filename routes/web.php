@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\administracion\AbogadoController;
 use App\Http\Controllers\administracion\AsesoriaController;
+use App\Http\Controllers\Administracion\ModoAsesoriaController;
 use App\Http\Controllers\administracion\NotificacionController;
 use App\Http\Controllers\administracion\OperadorController;
 use App\Http\Controllers\seguridad\PermissionController;
@@ -37,8 +38,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('seguridad/role/update_permission', [RoleController::class, 'updatePermission']);
     Route::resource('seguridad/role', RoleController::class);
     Route::post('seguridad/user/update_password/{id}', [UserController::class, 'updatePassword']);
-    Route::get('seguridad/configuracion', [UserController::class, 'configuracion']);
-    Route::post('seguridad/configuracion', [UserController::class, 'configuracionStore']);
     Route::resource('seguridad/user', UserController::class);
 
 
@@ -49,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('administracion/asesoria/reagendar', [AsesoriaController::class, 'reagendar']);
     Route::resource('administracion/asesoria', AsesoriaController::class);
     Route::resource('administracion/notificacion', NotificacionController::class);
+    Route::resource('administracion/modo_asesoria', ModoAsesoriaController::class);
 
 
     Route::get('usuario/asesoria/agendadas', [AsesoriaUsuarioController::class, 'agendadas']);
