@@ -195,8 +195,8 @@
                                    @endforeach
                                </select>
                            </div>
-
-                           <div class="col-md-12" id="divEnlace" style="display: none;">
+                           {{-- style="display: none;" --}}
+                           <div class="col-md-12" id="divEnlace">
                                <label class="form-label fw-bold">Adjuntar enlace de asesoria:</label>
                                <input type="text" class="form-control" name="enlace">
                            </div>

@@ -10,6 +10,7 @@ class Configuracion extends Model
     use HasFactory;
 
     protected $table = 'configuracion';
+    public $timestamps = false;
 
     protected $fillable = [
         'costo_asesoria',

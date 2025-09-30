@@ -107,13 +107,17 @@
                                         <td>
                                             {{ $item->fecha_pago ? \Carbon\Carbon::parse($item->fecha_pago)->format('d/m/Y') : '-' }}
                                         </td>
-                                         <td>{{ $item->id_trasaccion }}</td>
+                                        <td>{{ $item->id_trasaccion }}</td>
                                         <td style="text-align: center">
                                             <button class="btn btn-sm btn-dark btn-wave"
                                                 onclick="getDetalle({{ $item->id }})">
                                                 &nbsp;Ver&nbsp;
                                             </button>
-
+                                            {{-- @if ($item->estado_asesoria_id == 2)
+                                                <button class="btn btn-sm btn-primary btn-wave">
+                                                    &nbsp;<i class="bi bi-arrow-left-right"></i>&nbsp;
+                                                </button>
+                                            @endif --}}
 
 
                                         </td>
