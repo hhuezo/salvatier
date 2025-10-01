@@ -62,10 +62,14 @@ class UsersRolesSeeder extends Seeder
             ['nombre' => 'Finalizada', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
-        DB::table('modo_asesoria')->insert([
-            ['nombre' => 'Presencial', 'costo' => 0.01, 'created_at' => now(), 'updated_at' => now()],
-            ['nombre' => 'Virtual', 'costo' => 0.02, 'created_at' => now(), 'updated_at' => now()],
-            ['nombre' => 'Empresarial', 'costo' => 0.03, 'created_at' => now(), 'updated_at' => now()],
+        // DB::table('modo_asesoria')->insert([
+        //     ['nombre' => 'Presencial', 'costo' => 0.01, 'created_at' => now(), 'updated_at' => now()],
+        //     ['nombre' => 'Virtual', 'costo' => 0.02, 'created_at' => now(), 'updated_at' => now()],
+        //     ['nombre' => 'Empresarial', 'costo' => 0.03, 'created_at' => now(), 'updated_at' => now()],
+        // ]);
+
+          DB::table('estado_servicio')->insert([
+            ['nombre' => 'Registrada'], ['nombre' => 'Finalizada'], ['nombre' => 'Anulada'],
         ]);
 
 

@@ -18,7 +18,6 @@ class Pago extends Model
         'fecha',
         'cantidad',
         'usuario_creador',
-        'teimestamp',
     ];
 
     public function servicio()

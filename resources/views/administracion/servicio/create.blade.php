@@ -4,7 +4,7 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
-                    NUEVO SERVICIO
+                    Nuevo servicio
                 </div>
                 <div class="prism-toggle">
                     <a href="{{ route('pago.index') }}">
@@ -24,7 +24,9 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('servicio.store') }}">
+                <div id="errorMessages"></div>
+
+                <form method="POST" action="{{ route('servicio.store') }}" id="form">
                     @csrf
                     <div class="row gy-3">
                         <div class="col-md-3">
@@ -36,7 +38,6 @@
                         <div class="col-md-3">
                             <label class="form-label" for="tipo_pago_id">Tipo pago</label>
                             <select name="tipo_pago_id" id="tipo_pago_id" class="form-select" required>
-                                <option value="">Seleccione</option>
                                 @foreach ($tipos_pago as $tipo_pago)
                                     <option value="{{ $tipo_pago->id }}"
                                         {{ old('tipo_pago_id') == $tipo_pago->id ? 'selected' : '' }}>
@@ -68,13 +69,13 @@
                         <div class="col-md-3">
                             <label class="form-label" for="primer_abono">Primer abono</label>
                             <input type="number" step="0.01" name="primer_abono" id="primer_abono" class="form-control"
-                                value="{{ old('primer_abono') }}">
+                                value="{{ old('primer_abono', '0.00') }}">
                         </div>
 
                         <div class="col-md-3">
                             <label class="form-label" for="pago_minimo">Pago mínimo</label>
                             <input type="number" step="0.01" name="pago_minimo" id="pago_minimo" class="form-control"
-                                value="{{ old('pago_minimo') }}">
+                                value="{{ old('pago_minimo', '0.00') }}">
                         </div>
 
                         <div class="col-md-3">
@@ -110,8 +111,10 @@
                     </div>
 
                     <div class="card-footer mt-4 text-end">
-                        <button type="button" class="btn btn-primary" onclick="getPagos()">Guardar</button>
-                        {{-- <button type="submit" class="btn btn-primary">Guardar</button> --}}
+                        <button type="button" id="btnPrevisualizar" class="btn btn-info"
+                            onclick="getPagos()">Previsalizar</button>
+                        <button type="button" id="btnGuardar" class="btn btn-primary"
+                            onclick="store()">Aceptar</button>
                     </div>
                 </form>
 
@@ -126,23 +129,109 @@
         </div>
     </div>
 
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             expandMenuAndHighlightOption('li-pago');
+
+            $('#btnPrevisualizar').hide();
+
+
+
+            $('#tipo_pago_id').change(function() {
+                const valor = $(this).val();
+                if (valor === "2" || valor === "3" || valor === "4") {
+                    $('#btnGuardar').hide();
+                    $('#btnPrevisualizar').show();
+                } else {
+                    $('#btnGuardar').show();
+                    $('#btnPrevisualizar').hide();
+
+                }
+            });
         });
 
         function getPagos() {
-            const fechaContrato = document.getElementById('fecha_contrato').value;
-            const tipoPagoId = document.getElementById('tipo_pago_id').value;
-            const empresaId = document.getElementById('empresa_id').value;
-            const montoContratado = document.getElementById('monto_contratado').value;
-            const primerAbono = document.getElementById('primer_abono').value;
-            const pagoMinimo = document.getElementById('pago_minimo').value;
-            const numeroCuotas = document.getElementById('numero_cuotas').value;
-            const oficinaId = document.getElementById('oficina_id').value;
-            const fechaPrimerPago = document.getElementById('fecha_primer_pago').value;
-            const detalle = document.getElementById('detalle').value;
+            const fechaContrato = document.getElementById('fecha_contrato').value.trim();
+            const tipoPagoId = document.getElementById('tipo_pago_id').value.trim();
+            const empresaId = document.getElementById('empresa_id').value.trim();
+            const montoContratado = document.getElementById('monto_contratado').value.trim();
+            const primerAbono = document.getElementById('primer_abono').value.trim();
+            const pagoMinimo = document.getElementById('pago_minimo').value.trim();
+            const numeroCuotas = document.getElementById('numero_cuotas').value.trim();
+            const oficinaId = document.getElementById('oficina_id').value.trim();
+            const fechaPrimerPago = document.getElementById('fecha_primer_pago').value.trim();
+            const detalle = document.getElementById('detalle').value.trim();
 
+            // Campos requeridos con mensajes personalizados
+            const camposRequeridos = {
+                'fecha_contrato': {
+                    valor: fechaContrato,
+                    mensaje: 'La fecha de contrato es obligatoria.'
+                },
+                'tipo_pago_id': {
+                    valor: tipoPagoId,
+                    mensaje: 'Debes seleccionar un tipo de pago.'
+                },
+                // 'empresa_id': {
+                //     valor: empresaId,
+                //     mensaje: 'Debes seleccionar una empresa.'
+                // },
+                'monto_contratado': {
+                    valor: montoContratado,
+                    mensaje: 'El monto contratado es obligatorio.'
+                },
+                'primer_abono': {
+                    valor: primerAbono,
+                    mensaje: 'El primer abono es obligatorio.'
+                },
+                'pago_minimo': {
+                    valor: pagoMinimo,
+                    mensaje: 'El pago mínimo es obligatorio.'
+                },
+                'numero_cuotas': {
+                    valor: numeroCuotas,
+                    mensaje: 'El número de cuotas es obligatorio.'
+                },
+                // 'oficina_id': {
+                //     valor: oficinaId,
+                //     mensaje: 'Debes seleccionar una oficina.'
+                // },
+                'fecha_primer_pago': {
+                    valor: fechaPrimerPago,
+                    mensaje: 'La fecha del primer pago es obligatoria.'
+                },
+                // 'detalle': {
+                //     valor: detalle,
+                //     mensaje: 'El detalle es obligatorio.'
+                // }
+            };
+
+            let errores = [];
+
+            for (const campo in camposRequeridos) {
+                if (!camposRequeridos[campo].valor) {
+                    errores.push(camposRequeridos[campo].mensaje);
+                }
+            }
+
+            // Contenedor de errores
+            const errorDiv = document.getElementById('errorMessages');
+            errorDiv.innerHTML = ''; // Limpiar errores anteriores
+
+            if (errores.length > 0) {
+                let htmlErrores = `
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    ${errores.map(error => `<li>${error}</li>`).join('')}
+                </ul>
+            </div>
+        `;
+                errorDiv.innerHTML = htmlErrores;
+                return; // ❌ No continuar con el fetch
+            }
+
+            // Si todo está OK → armo parámetros
             const params = new URLSearchParams({
                 fecha_contrato: fechaContrato,
                 tipo_pago_id: tipoPagoId,
@@ -166,6 +255,90 @@
                     document.getElementById('divResponse').innerHTML =
                         '<p class="text-danger">Ocurrió un error al cargar la previsualización.</p>';
                 });
+        }
+
+
+
+
+        function store() {
+            const fechaContrato = document.getElementById('fecha_contrato').value.trim();
+            const tipoPagoId = document.getElementById('tipo_pago_id').value.trim();
+            const empresaId = document.getElementById('empresa_id').value.trim();
+            const montoContratado = document.getElementById('monto_contratado').value.trim();
+            const primerAbono = document.getElementById('primer_abono').value.trim();
+            const pagoMinimo = document.getElementById('pago_minimo').value.trim();
+            const numeroCuotas = document.getElementById('numero_cuotas').value.trim();
+            const oficinaId = document.getElementById('oficina_id').value.trim();
+            const fechaPrimerPago = document.getElementById('fecha_primer_pago').value.trim();
+            const detalle = document.getElementById('detalle').value.trim();
+
+            // Campos requeridos con mensajes personalizados
+            const camposRequeridos = {
+                'fecha_contrato': {
+                    valor: fechaContrato,
+                    mensaje: 'La fecha de contrato es obligatoria.'
+                },
+                'tipo_pago_id': {
+                    valor: tipoPagoId,
+                    mensaje: 'Debes seleccionar un tipo de pago.'
+                },
+                'empresa_id': {
+                    valor: empresaId,
+                    mensaje: 'Debes seleccionar una empresa.'
+                },
+                'monto_contratado': {
+                    valor: montoContratado,
+                    mensaje: 'El monto contratado es obligatorio.'
+                },
+                // 'primer_abono': {
+                //     valor: primerAbono,
+                //     mensaje: 'El primer abono es obligatorio.'
+                // },
+                // 'pago_minimo': {
+                //     valor: pagoMinimo,
+                //     mensaje: 'El pago mínimo es obligatorio.'
+                // },
+                // 'numero_cuotas': {
+                //     valor: numeroCuotas,
+                //     mensaje: 'El número de cuotas es obligatorio.'
+                // },
+                'oficina_id': {
+                    valor: oficinaId,
+                    mensaje: 'Debes seleccionar una oficina.'
+                },
+                // 'fecha_primer_pago': {
+                //     valor: fechaPrimerPago,
+                //     mensaje: 'La fecha del primer pago es obligatoria.'
+                // }
+            };
+
+            let errores = [];
+
+            for (const campo in camposRequeridos) {
+                if (!camposRequeridos[campo].valor) {
+                    errores.push(camposRequeridos[campo].mensaje);
+                }
+            }
+
+            // Contenedor de errores
+            const errorDiv = document.getElementById('errorMessages');
+            errorDiv.innerHTML = ''; // Limpiar errores anteriores
+
+            if (errores.length > 0) {
+                let htmlErrores = `
+                    <div class="alert alert-danger">
+                        <ul class="mb-0">
+                            ${errores.map(error => `<li>${error}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+                errorDiv.innerHTML = htmlErrores;
+                return; // ❌ No continuar con el fetch
+            }
+
+            // Si todo está bien, enviar el formulario
+            document.getElementById('form').submit();
+
         }
     </script>
 @endsection

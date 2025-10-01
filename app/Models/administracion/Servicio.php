@@ -22,7 +22,6 @@ class Servicio extends Model
         'pago_minimo',
         'detalle',
         'numero_cuotas',
-        'teimestamp',
         'usuario_creador',
     ];
 
@@ -36,8 +35,18 @@ class Servicio extends Model
         return $this->belongsTo(Oficina::class, 'oficina_id');
     }
 
-     public function tipo_pago()
+    public function tipo_pago()
     {
         return $this->belongsTo(TipoPago::class, 'tipo_pago_id');
+    }
+
+    public function estado_servicio()
+    {
+        return $this->belongsTo(EstadoServicio::class, 'estado_servicio_id');
+    }
+
+     public function pagos()
+    {
+        return $this->hasMany(Pago::class, 'servicio_id');
     }
 }
