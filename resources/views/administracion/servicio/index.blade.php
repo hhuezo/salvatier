@@ -55,6 +55,7 @@
                             <thead class="table-dark">
                                 <tr>
                                     <th>Opciones</th>
+                                    <th>#</th>
                                     <th>Empresa</th>
                                     <th>Oficina</th>
                                     <th>Monto contratado</th>
@@ -76,7 +77,7 @@
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
                                         </td>
-                                        {{-- <td>{{ $item->id }}</td> --}}
+                                        <td>{{ $item->id }}</td>
                                         <td>{{ $item->empresa->nombre ?? '-' }}</td>
                                         <td>{{ $item->oficina->nombre ?? '-' }}</td>
                                         <td>${{ number_format($item->monto_contratado, 2) }}</td>
