@@ -5,10 +5,12 @@ use App\Http\Controllers\administracion\AsesoriaController;
 use App\Http\Controllers\Administracion\ModoAsesoriaController;
 use App\Http\Controllers\administracion\NotificacionController;
 use App\Http\Controllers\administracion\PagoController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
 use App\Http\Controllers\seguridad\UserController;
 use App\Http\Controllers\usuario\AsesoriaUsuarioController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -59,4 +61,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('usuario/asesoria/pago_finalizado', [AsesoriaUsuarioController::class, 'pago_finalizado']);
     Route::get('usuario/asesoria/get_territorio/{id}', [AsesoriaUsuarioController::class, 'getTerritorio']);
     Route::resource('usuario/asesoria', AsesoriaUsuarioController::class);
+
 });
