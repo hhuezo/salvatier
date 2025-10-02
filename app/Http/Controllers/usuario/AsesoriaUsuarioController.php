@@ -148,6 +148,8 @@ class AsesoriaUsuarioController extends Controller
             $anio = date('Y');
         }
 
+
+
         // 2️⃣ Llamar a la API de regiones
         $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
         $regiones = $response->json();
@@ -192,7 +194,6 @@ class AsesoriaUsuarioController extends Controller
             "codigoPostal" => "10101",
             "telefono" => preg_replace('/\D/', '', auth()->user()->phone),
         ];
-
 
         try {
 

@@ -1,5 +1,19 @@
 @extends('menu')
 @section('content')
+
+    <!-- Toastr CSS -->
+    <link href="{{ asset('assets/libs/toast/toastr.min.css') }}" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+
+    <!-- Toastr JS -->
+    <script src="{{ asset('assets/libs/toast/toastr.min.js') }}"></script>
+
+    <link href="{{ asset('assets/libs/select2/select2.min.css') }}" rel="stylesheet" />
+
+    <!-- JS de Select2 -->
+    <script src="{{ asset('assets/libs/select2/select2.min.js') }}"></script>
     <div class="col-xl-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
@@ -49,7 +63,7 @@
 
                         <div class="col-md-6">
                             <label class="form-label" for="empresa_id">Empresa</label>
-                            <select name="empresa_id" id="empresa_id" class="form-select" required>
+                            <select name="empresa_id" id="empresa_id" class="form-select select2" required>
                                 <option value="">Seleccione</option>
                                 @foreach ($empresas as $empresa)
                                     <option value="{{ $empresa->id }}"
@@ -129,10 +143,16 @@
         </div>
     </div>
 
-    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             expandMenuAndHighlightOption('li-pago');
+
+             $('.select2').select2({
+                //placeholder: "Seleccione una opción",
+                allowClear: true,
+                width: '100%',
+                //dropdownParent: $('#modal-create-cita')
+            });
 
             $('#btnPrevisualizar').hide();
 

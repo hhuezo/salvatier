@@ -11,6 +11,19 @@
     <!-- Toastr JS -->
     <script src="{{ asset('assets/libs/toast/toastr.min.js') }}"></script>
 
+
+    @if (session('success'))
+        <script>
+            toastr.success("{{ session('success') }}");
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            toastr.error("{{ session('error') }}");
+        </script>
+    @endif
+
     <div class="col-xl-12">
         <div class="card custom-card">
             <div class="card-header justify-content-between">
@@ -137,7 +150,7 @@
                                     </button>
                                     @if ($pago->finalizado != true)
                                         <button class="btn btn-sm btn-danger btn-wave" data-bs-toggle="modal"
-                                        data-bs-target="#modal-delete-{{ $pago->id }}">
+                                            data-bs-target="#modal-delete-{{ $pago->id }}">
                                             <i class="bi bi-trash-fill"></i>
                                         </button>
                                     @endif

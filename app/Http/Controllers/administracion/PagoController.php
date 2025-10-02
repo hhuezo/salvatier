@@ -269,7 +269,9 @@ class PagoController extends Controller
             }
         }
 
-        return redirect()->route('pago.index')->with('success', 'Servicio guardado correctamente.');
+        return redirect()
+            ->route('servicio.show', ['id' => $servicio->id])
+            ->with('success', 'Servicio guardado correctamente.');
     }
 
     public function store(Request $request)

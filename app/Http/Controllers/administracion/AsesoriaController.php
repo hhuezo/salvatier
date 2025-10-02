@@ -77,7 +77,7 @@ class AsesoriaController extends Controller
         $validated = $request->validate([
             'id'    => 'required|exists:asesoria,id',
             'fecha' => 'required|date|after:today',
-            'hora'  => 'required|date_format:H:i',
+            'hora'  => ['required', 'regex:/^(?:[01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/'],
         ], [
             'id.required' => 'El ID de la asesoría es obligatorio.',
             'id.exists'   => 'La asesoría seleccionada no existe.',
@@ -86,9 +86,10 @@ class AsesoriaController extends Controller
             'fecha.date'     => 'La fecha debe tener un formato válido.',
             'fecha.after'    => 'La fecha debe ser mayor a la fecha actual.',
 
-            'hora.required'    => 'La hora es obligatoria.',
-            'hora.date_format' => 'La hora debe tener el formato HH:mm.',
+            'hora.required' => 'La hora es obligatoria.',
+            'hora.regex'    => 'La hora debe tener el formato válido HH:mm o HH:mm:ss.',
         ]);
+
 
         DB::beginTransaction();
 
@@ -140,7 +141,7 @@ class AsesoriaController extends Controller
             $q->where('id', 2);
         })->get();
 
-        return view('administracion.asesoria.detalle', compact('asesoria','abogados'));
+        return view('administracion.asesoria.detalle', compact('asesoria', 'abogados'));
     }
 
 

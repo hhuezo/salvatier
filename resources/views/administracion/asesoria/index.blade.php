@@ -109,19 +109,29 @@
                                         </td>
                                         <td>{{ $item->id_trasaccion }}</td>
                                         <td style="text-align: center">
-                                            <button class="btn btn-sm btn-dark btn-wave"
-                                                onclick="getDetalle({{ $item->id }})">
-                                                &nbsp;Ver&nbsp;
-                                            </button>
-                                            {{-- @if ($item->estado_asesoria_id == 2)
-                                                <button class="btn btn-sm btn-primary btn-wave">
-                                                    &nbsp;<i class="bi bi-arrow-left-right"></i>&nbsp;
-                                                </button>
-                                            @endif --}}
+                                            @can('confirmar asesoria')
+                                                @if ($item->estado_asesoria_id == 2)
+                                                    <button class="btn btn-sm btn-success btn-wave" data-bs-toggle="modal"
+                                                        data-bs-target="#modal-confirmar-{{ $item->id }}">
+                                                        <i class="bi bi-check-circle"></i>
+                                                    </button>
+                                                @endif
+                                            @endcan
+
+                                            @can('reagendar asesoria')
+                                                @if ($item->estado_asesoria_id == 3 || $item->estado_asesoria_id == 4)
+                                                    <button class="btn btn-sm btn-info btn-wave" data-bs-toggle="modal"
+                                                        data-bs-target="#modal-reagendar-{{ $item->id }}">
+                                                        <i class="bi bi-calendar-check"></i>
+                                                    </button>
+                                                @endif
+                                            @endcan
 
 
                                         </td>
                                     </tr>
+                                    @include('administracion.asesoria.modal_confirmar')
+                                    @include('administracion.asesoria.modal_reagendar')
                                 @endforeach
                             </tbody>
                         </table>
@@ -132,85 +142,6 @@
 
             </div>
         </div>
-        <div class="col-xl-3" id="divDetalle">
-            <div class="card custom-card">
-                <div class="card-header justify-content-between">
-                    <div class="card-title">
-                        Detalle
-                    </div>
-                </div>
-
-                <div class="card-body">
-
-                    <div class="row gy-3">
-                        <input type="hidden" class="form-control" id="asesoria_id" readonly>
-                        <div class="col-12">
-                            <div class="d-flex align-items-center">
-                                <div class="me-3">
-                                    <span class="avatar avatar-xl bg-primary-transparent">
-                                        <img src="{{ asset('assets/images/perfil.png') }}" alt="">
-                                    </span>
-                                </div>
-                                <div>
-                                    <div class="mb-1 fs-14 fw-medium">
-                                        <a href="javascript:void(0);">
-                                            Usuario</a>
-                                    </div>
-                                    <div class="mb-1">
-                                        <span class="me-1 d-inline-block" id="userName"></span>
-                                    </div>
-                                    <div class="mb-1">
-                                        <span class="me-1 d-inline-block" id="userEmail"> </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-
-
-                        <!-- Descripción -->
-                        <div class="col-12">
-                            <label class="form-label fw-bold">Descripción:</label>
-                            <textarea class="form-control" id="descripcion" rows="3" readonly></textarea>
-                        </div>
-
-                        <!-- Tipo -->
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">Tipo asesoria:</label>
-                            <input type="text" class="form-control" id="tipo_asesoria" readonly>
-                        </div>
-
-
-
-                        <!-- Modo -->
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">Modo asesoria:</label>
-                            <input type="text" id="modo_asesoria" class="form-control" readonly>
-                            <input type="hidden" id="enlace" class="form-control" readonly>
-                            <input type="hidden" id="modo_asesoria_id" class="form-control" readonly>
-                        </div>
-
-                        <!-- Fecha -->
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">Fecha asesoria:</label>
-                            <input type="date" class="form-control" id="fecha" readonly>
-                        </div>
-
-                        <!-- Hora -->
-                        <div class="col-md-12">
-                            <label class="form-label fw-bold">Hora asesoria:</label>
-                            <input type="text" class="form-control" id="hora" readonly>
-                        </div>
-
-                    </div>
-                </div>
-
-
-
-
-            </div>
-        </div>
-
     </div>
 
 
@@ -261,24 +192,6 @@
 
         });
 
-
-        function getDetalle(id) {
-            fetch(`{{ url('administracion/asesoria') }}/${id}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error en la solicitud');
-                    }
-                    return response.text(); // <-- recibir HTML
-                })
-                .then(html => {
-                    document.getElementById('divDetalle').innerHTML = html; // insertar en el div
-                })
-                .catch(error => {
-                    console.error('Ocurrió un error:', error);
-                    document.getElementById('divDetalle').innerHTML =
-                        '<div class="alert alert-danger">No se pudo cargar el detalle.</div>';
-                });
-        }
     </script>
     <!-- End:: row-1 -->
 @endsection

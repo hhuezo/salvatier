@@ -71,7 +71,6 @@ class RegisterController extends Controller
             'phone.max'             => 'El número de teléfono no puede superar los 255 caracteres.',
         ]);
 
-
         try {
             $user = DB::transaction(function () use ($request, $validated) {
                 $filename = null;
@@ -82,15 +81,15 @@ class RegisterController extends Controller
                     $file->storeAs('public/photos', $filename);
                 }
 
-                $user = User::create([
-                    'name'     => $validated['name'],
-                    'lastname' => $validated['lastname'],
-                    'phone' => $validated['phone'],
-                    'email'    => $validated['email'],
-                    'password' => Hash::make($validated['password']),
-                    'photo'    => $filename,
-                    'active'   => 1,
-                ]);
+                $user = new User();
+                $user->name     = $validated['name'];
+                $user->lastname = $validated['lastname'];
+                $user->phone    = $validated['phone'];
+                $user->email    = $validated['email'];
+                $user->password = Hash::make($validated['password']);
+                $user->photo    = $filename;
+                $user->active   = 1;
+                $user->save();
 
                 return $user;
             });
