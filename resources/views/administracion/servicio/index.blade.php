@@ -20,10 +20,10 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
-                        Gestionar asesorias
+                        Gestionar servicios
                     </div>
                     <div class="prism-toggle">
-                        <a href="{{route('pago.create')}}" class="btn btn-primary" >Agregar</a>
+                        <a href="{{ route('pago.create') }}" class="btn btn-primary">Agregar</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -54,6 +54,7 @@
                         <table id="datatable-basic" class="table table-striped text-nowrap w-100">
                             <thead class="table-dark">
                                 <tr>
+                                    <th>Opciones</th>
                                     <th>#</th>
                                     <th>Empresa</th>
                                     <th>Oficina</th>
@@ -64,13 +65,18 @@
                                     <th>Tipo pago</th>
                                     <th>Detalle</th>
                                     <th>Fecha contrato</th>
-                                    {{-- <th>Usuario creador</th> --}}
-                                    <th>Opciones</th>
+                                    <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($servicios as $item)
                                     <tr>
+                                        <td style="text-align: center">
+                                            <a href="{{ route('servicio.show', $item) }}"
+                                                class="btn btn-sm btn-info btn-wave">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </a>
+                                        </td>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->empresa->nombre ?? '-' }}</td>
                                         <td>{{ $item->oficina->nombre ?? '-' }}</td>
@@ -80,14 +86,27 @@
                                         <td>{{ $item->pago_minimo ? '$' . number_format($item->pago_minimo, 2) : '-' }}
                                         </td>
                                         <td>{{ $item->numero_cuotas ?? '-' }}</td>
-                                         <td>{{ $item->tipo_pago->nombre ?? '-' }}</td>
+                                        <td>{{ $item->tipo_pago->nombre ?? '-' }}</td>
                                         <td>{{ $item->detalle ?? '-' }}</td>
                                         <td>{{ $item->fecha_contrato ? \Carbon\Carbon::parse($item->fecha_contrato)->format('d/m/Y') : '-' }}
                                         </td>
-                                        {{-- <td>{{ $item->usuarioCreador->name ?? '-' }}</td> --}}
-                                        <td style="text-align: center">
-                                            <!-- aquí irán los botones de acción -->
+                                        <td>
+                                            @if ($item->estado_servicio_id)
+                                                @php
+                                                    $color = match ($item->estado_servicio_id) {
+                                                        1 => 'info',
+                                                        2 => 'success',
+                                                        3 => 'danger',
+                                                        default => 'secondary',
+                                                    };
+                                                @endphp
+                                                <button
+                                                    class="btn btn-sm btn-{{ $color }}">{{ $item->estado_servicio->nombre }}</button>
+                                            @else
+                                                <button class="btn btn-sm btn-secondary">-</button>
+                                            @endif
                                         </td>
+
                                     </tr>
                                 @endforeach
                             </tbody>

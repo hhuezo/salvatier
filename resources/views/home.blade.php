@@ -12,41 +12,34 @@
 
         <div class="row">
             <!-- Gráfico de Barras -->
-            <div class="col-12 col-md-6 mb-4">
+            <div class="col-12 col-md-12 mb-4">
                 <div class="card custom-card">
                     <div class="card-body">
-                        <div id="grafico-barras" style="height: 400px;"></div>
+                        <div id="grafico-pagos" style="height: 400px;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Gráfico de Pastel -->
-            <div class="col-12 col-md-6 mb-4">
-                <div class="card custom-card">
-                    <div class="card-body">
-                        <div id="grafico-lineas" style="height: 400px;"></div>
-                    </div>
-                </div>
-            </div>
         </div>
-        </div>
+
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
-                // Gráfico de Barras Comparativo por Años
-                Highcharts.chart('grafico-barras', {
+                Highcharts.chart('grafico-pagos', {
                     chart: {
                         type: 'column',
                         backgroundColor: null
                     },
                     title: {
-                        text: 'Ventas por Año',
+                        text: 'Pagos por Mes ({{ date('Y') }})',
                         style: {
                             color: '#000'
                         }
                     },
                     xAxis: {
-                        categories: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                        categories: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct',
+                            'Nov', 'Dic'
+                        ],
                         labels: {
                             style: {
                                 color: '#000'
@@ -66,76 +59,35 @@
                             }
                         }
                     },
-                    legend: {
-                        itemStyle: {
-                            color: '#000'
+                    plotOptions: {
+                        column: {
+                            colorByPoint: true, // Cada barra con diferente color
+                            dataLabels: {
+                                enabled: true, // Mostrar los valores
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: '#000'
+                                },
+                                formatter: function() {
+                                    return '$' + Highcharts.numberFormat(this.y, 2, '.', ',');
+                                }
+                            }
                         }
                     },
                     series: [{
-                            name: 'Ventas A',
-                            data: [120, 150, 180, 200, 220, 250],
-                            color: '#00B681'
-                        },
-                        {
-                            name: 'Ventas B',
-                            data: [100, 130, 160, 180, 210, 240],
-                            color: '#004C33'
-                        }
-                    ]
-                });
-
-
-
-                // Gráfico de Líneas Comparativo por Año
-                Highcharts.chart('grafico-lineas', {
-                    chart: {
-                        type: 'line',
-                        backgroundColor: null
-                    },
-                    title: {
-                        text: 'Ventas por Año (Líneas)',
-                        style: {
-                            color: '#000'
-                        }
-                    },
-                    xAxis: {
-                        categories: ['2020', '2021', '2022', '2023', '2024', '2025'],
-                        labels: {
-                            style: {
-                                color: '#000'
-                            }
-                        }
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Cantidad',
-                            style: {
-                                color: '#000'
-                            }
-                        },
-                        labels: {
-                            style: {
-                                color: '#000'
-                            }
-                        }
-                    },
+                        name: 'Pagos',
+                        data: @json($data),
+                        colors: [
+                            '#00B681', '#004C33', '#FF5733', '#FFC300', '#C70039',
+                            '#900C3F', '#581845', '#2E86C1', '#117A65', '#F39C12',
+                            '#8E44AD', '#1ABC9C'
+                        ]
+                    }],
                     legend: {
-                        itemStyle: {
-                            color: '#000'
-                        }
-                    },
-                    series: [{
-                            name: '2024',
-                            data: [120, 150, 180, 200, 220, 250],
-                            color: '#00B681'
-                        },
-                        {
-                            name: '2025',
-                            data: [100, 130, 160, 180, 210, 240],
-                            color: '#004C33'
-                        }
-                    ]
+                        enabled: false
+                    }
                 });
+
 
             });
         </script>
@@ -167,8 +119,8 @@
                         </p>
 
                         <div class="card-footer text-end">
-                            <a href="{{url('usuario/asesoria/agendadas')}}">
-                            <button class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></button>
+                            <a href="{{ url('usuario/asesoria/agendadas') }}">
+                                <button class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></button>
                             </a>
                         </div>
                     </div>

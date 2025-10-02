@@ -29,4 +29,9 @@
             <th>${{ number_format($total, 2) }}</th>
         </tr>
     </tbody>
+
+    <tr>
+        <th colspan="3" class="text-end"> <button type="button" id="btnGuardar" class="btn btn-primary"
+                onclick="store()">Aceptar</button></th>
+    </tr>
 </table>
