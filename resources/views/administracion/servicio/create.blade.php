@@ -147,7 +147,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             expandMenuAndHighlightOption('li-pago');
 
-             $('.select2').select2({
+            $('.select2').select2({
                 //placeholder: "Seleccione una opción",
                 allowClear: true,
                 width: '100%',
@@ -163,10 +163,12 @@
                 if (valor === "2" || valor === "3" || valor === "4") {
                     $('#btnGuardar').hide();
                     $('#btnPrevisualizar').show();
+                    $('#divResponse').show();
+
                 } else {
                     $('#btnGuardar').show();
                     $('#btnPrevisualizar').hide();
-
+                    $('#divResponse').hide();
                 }
             });
         });
