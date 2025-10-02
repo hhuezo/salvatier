@@ -392,14 +392,14 @@
                             </li>
                         @endcan
 
-                        @can('menu gestionar de contenido')
+                        {{-- @can('menu gestionar de contenido')
                             <li class="slide">
                                 <a href="widgets.html" class="side-menu__item">
                                     <i class="bi bi-pen-fill w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Gestionar de contenido</span>
                                 </a>
                             </li>
-                        @endcan
+                        @endcan --}}
 
 
                         @can('menu sucursales')
