@@ -2,6 +2,7 @@
 
 namespace App\Models\administracion;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +15,7 @@ class Pago extends Model
 
     protected $fillable = [
         'numero',
-        'servicio_id',
+        'contrato_id',
         'fecha',
         'cantidad',
         'usuario_creador',
@@ -22,11 +23,11 @@ class Pago extends Model
 
     public function servicio()
     {
-        return $this->belongsTo(Servicio::class, 'servicio_id');
+        return $this->belongsTo(Contrato::class, 'contrato_id');
     }
 
     public function usuario()
     {
-        return $this->belongsTo(\App\Models\User::class, 'usuario_creador');
+        return $this->belongsTo(User::class, 'usuario_creador');
     }
 }

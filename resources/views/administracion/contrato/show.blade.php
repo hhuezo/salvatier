@@ -28,10 +28,10 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
-                    Servicio
+                    contrato
                 </div>
                 <div class="prism-toggle">
-                    <a href="{{ route('pago.index') }}">
+                    <a href="{{ route('contrato.index') }}">
                         <button class="btn btn-primary"><i class="bi bi-arrow-90deg-left"></i></button>
                     </a>
                 </div>
@@ -52,59 +52,59 @@
                     <div class="col-md-3">
                         <label class="form-label" for="fecha_contrato">Fecha contrato</label>
                         <input type="date" name="fecha_contrato" id="fecha_contrato" class="form-control"
-                            value="{{ $servicio->fecha_contrato ?? '' }}" disabled>
+                            value="{{ $contrato->fecha_contrato ?? '' }}" disabled>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label" for="tipo_pago_id">Tipo pago</label>
-                        <input type="text" class="form-control" value="{{ $servicio->tipo_pago->nombre ?? '-' }}"
+                        <input type="text" class="form-control" value="{{ $contrato->tipo_pago->nombre ?? '-' }}"
                             disabled>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label" for="empresa_id">Empresa</label>
-                        <input type="text" class="form-control" value="{{ $servicio->empresa->nombre ?? '-' }}" disabled>
+                        <input type="text" class="form-control" value="{{ $contrato->empresa->nombre ?? '-' }}" disabled>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label" for="monto_contratado">Monto contratado</label>
                         <input type="number" step="0.01" name="monto_contratado" id="monto_contratado"
-                            class="form-control" value="{{ $servicio->monto_contratado ?? '' }}" disabled>
+                            class="form-control" value="{{ $contrato->monto_contratado ?? '' }}" disabled>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label" for="primer_abono">Primer abono</label>
                         <input type="number" step="0.01" name="primer_abono" id="primer_abono" class="form-control"
-                            value="{{ $servicio->primer_abono ?? '0.00' }}" disabled>
+                            value="{{ $contrato->primer_abono ?? '0.00' }}" disabled>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label" for="pago_minimo">Pago mínimo</label>
                         <input type="number" step="0.01" name="pago_minimo" id="pago_minimo" class="form-control"
-                            value="{{ $servicio->pago_minimo ?? '0.00' }}" disabled>
+                            value="{{ $contrato->pago_minimo ?? '0.00' }}" disabled>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label" for="numero_cuotas">Número de cuotas</label>
                         <input type="number" step="1" name="numero_cuotas" id="numero_cuotas" class="form-control"
-                            value="{{ $servicio->numero_cuotas ?? '' }}" disabled>
+                            value="{{ $contrato->numero_cuotas ?? '' }}" disabled>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label" for="oficina_id">Oficina</label>
-                        <input type="text" class="form-control" value="{{ $servicio->oficina->nombre ?? '-' }}"
+                        <input type="text" class="form-control" value="{{ $contrato->oficina->nombre ?? '-' }}"
                             disabled>
                     </div>
 
                     <div class="col-md-3">
                         <label class="form-label" for="fecha_primer_pago">Fecha primer pago</label>
                         <input type="date" name="fecha_primer_pago" id="fecha_primer_pago" class="form-control"
-                            value="{{ $servicio->fecha_primer_pago ?? '' }}" disabled>
+                            value="{{ $contrato->fecha_primer_pago ?? '' }}" disabled>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label" for="detalle">Detalle pago</label>
-                        <textarea name="detalle" id="detalle" class="form-control" disabled>{{ $servicio->detalle ?? '' }}</textarea>
+                        <textarea name="detalle" id="detalle" class="form-control" disabled>{{ $contrato->detalle ?? '' }}</textarea>
                     </div>
 
 
@@ -134,7 +134,7 @@
                             $total = 0;
                         @endphp
 
-                        @foreach ($servicio->pagos as $pago)
+                        @foreach ($contrato->pagos->sortBy('fecha') as $pago)
                             @php
                                 $total += $pago->cantidad;
                             @endphp
@@ -158,8 +158,8 @@
                                 </td>
                             </tr>
 
-                            @include('administracion.servicio.pago_modal_edit')
-                            @include('administracion.servicio.pago_modal_delete')
+                            @include('administracion.contrato.pago_modal_edit')
+                            @include('administracion.contrato.pago_modal_delete')
                         @endforeach
 
                         <tr>
@@ -191,12 +191,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
 
-                <form method="POST" action="{{ url('administracion/pago') }}">
+                <form method="POST" action="{{ route('pago.store') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="row gy-3">
                             <div class="col-md-6">
-                                <input type="hidden" name="servicio_id" value="{{ $servicio->id }}">
+                                <input type="hidden" name="contrato_id" value="{{ $contrato->id }}">
                                 <label for="numero" class="form-label">Número</label>
                                 <input type="number" class="form-control @error('numero') is-invalid @enderror"
                                     name="numero" id="numero" value="{{ old('numero') }}" required>

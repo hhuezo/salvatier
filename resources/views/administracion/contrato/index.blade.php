@@ -20,12 +20,11 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
-                        Gestionar asesorias
+                        Gestionar contratos
                     </div>
-                    {{-- <div class="prism-toggle">
-                        <button class="btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#modal-create">Agregar</button>
-                    </div> --}}
+                    <div class="prism-toggle">
+                        <a href="{{ route('contrato.create') }}" class="btn btn-primary">Agregar</a>
+                    </div>
                 </div>
                 <div class="card-body">
 
@@ -57,91 +56,58 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>#</th>
-                                    <th>Usuario</th>
-                                    <th>Correo</th>
-                                    <th>Descripción</th>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
+                                    <th>Empresa</th>
+                                    <th>Oficina</th>
+                                    <th>Monto contratado</th>
+                                    <th>Primer abono</th>
+                                    <th>Pago mínimo</th>
+                                    <th>Número de cuotas</th>
+                                    <th>Tipo pago</th>
+                                    <th>Detalle</th>
+                                    <th>Fecha contrato</th>
                                     <th>Estado</th>
-                                    <th>Tipo</th>
-                                    <th>Modo</th>
-                                    <th>Costo asesoria</th>
-                                    <th>Fecha pago</th>
-                                    <th>Id transacción</th>
-
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($asesorias as $item)
+                                @foreach ($contratos as $item)
                                     <tr>
                                         <td style="text-align: center">
-                                            @can('confirmar asesoria')
-                                                @if ($item->estado_asesoria_id == 2)
-                                                    <button class="btn btn-sm btn-success btn-wave" data-bs-toggle="modal"
-                                                        data-bs-target="#modal-confirmar-{{ $item->id }}">
-                                                        <i class="bi bi-check-circle"></i>
-                                                    </button>
-                                                @endif
-                                            @endcan
-
-                                            @can('reagendar asesoria')
-                                                @if ($item->estado_asesoria_id == 3 || $item->estado_asesoria_id == 4)
-                                                    <button class="btn btn-sm btn-info btn-wave" data-bs-toggle="modal"
-                                                        data-bs-target="#modal-reagendar-{{ $item->id }}">
-                                                        <i class="bi bi-calendar-check"></i>
-                                                    </button>
-                                                @endif
-                                            @endcan
-
-
-                                            <a href="{{ url('administracion/asesoria') }}/{{ $item->id }}"
-                                                class="btn btn-sm btn-success btn-wave">
+                                            <a href="{{ route('contrato.show', $item) }}"
+                                                class="btn btn-sm btn-info btn-wave">
                                                 <i class="bi bi-eye-fill"></i>
                                             </a>
-
-
                                         </td>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->user->name ?? '' }} {{ $item->user->lastname ?? '' }}</td>
-                                        <td>{{ $item->user->email ?? '' }}</td>
-                                        <td>{{ $item->descripcion }}</td>
-                                        <td>
-                                            {{ $item->fecha ? \Carbon\Carbon::parse($item->fecha)->format('d/m/Y') : '-' }}
+                                        <td>{{ $item->empresa->nombre ?? '-' }}</td>
+                                        <td>{{ $item->oficina->nombre ?? '-' }}</td>
+                                        <td>${{ number_format($item->monto_contratado, 2) }}</td>
+                                        <td>{{ $item->primer_abono ? '$' . number_format($item->primer_abono, 2) : '-' }}
                                         </td>
-
-                                        <td>
-                                            {{ $item->hora ? \Carbon\Carbon::parse($item->hora)->format('H:i') : '-' }}
+                                        <td>{{ $item->pago_minimo ? '$' . number_format($item->pago_minimo, 2) : '-' }}
+                                        </td>
+                                        <td>{{ $item->numero_cuotas ?? '-' }}</td>
+                                        <td>{{ $item->tipo_pago->nombre ?? '-' }}</td>
+                                        <td>{{ $item->detalle ?? '-' }}</td>
+                                        <td>{{ $item->fecha_contrato ? \Carbon\Carbon::parse($item->fecha_contrato)->format('d/m/Y') : '-' }}
                                         </td>
                                         <td>
-                                            @if ($item->estado)
+                                            @if ($item->estado_contrato_id)
                                                 @php
-                                                    $color = match ($item->estado->id) {
-                                                        1 => 'danger',
-                                                        2 => 'warning',
-                                                        3 => 'success',
-                                                        4 => 'info',
-                                                        5 => 'secondary',
+                                                    $color = match ($item->estado_contrato_id) {
+                                                        1 => 'info',
+                                                        2 => 'success',
+                                                        3 => 'danger',
                                                         default => 'secondary',
                                                     };
                                                 @endphp
                                                 <button
-                                                    class="btn btn-sm btn-{{ $color }}">{{ $item->estado->nombre }}</button>
+                                                    class="btn btn-sm btn-{{ $color }}">{{ $item->estado_contrato->nombre }}</button>
                                             @else
                                                 <button class="btn btn-sm btn-secondary">-</button>
                                             @endif
                                         </td>
 
-                                        <td>{{ $item->tipo->nombre ?? '-' }}</td>
-                                        <td>{{ $item->modo->nombre ?? '-' }}</td>
-                                        <td>{{ $item->costo_asesoria ? '$' . $item->costo_asesoria : '' }}</td>
-                                        <td>
-                                            {{ $item->fecha_pago ? \Carbon\Carbon::parse($item->fecha_pago)->format('d/m/Y') : '-' }}
-                                        </td>
-                                        <td>{{ $item->id_trasaccion }}</td>
-
                                     </tr>
-                                    @include('administracion.asesoria.modal_confirmar')
-                                    @include('administracion.asesoria.modal_reagendar')
                                 @endforeach
                             </tbody>
                         </table>
@@ -152,6 +118,7 @@
 
             </div>
         </div>
+
     </div>
 
 
@@ -165,7 +132,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-asesoria');
+            expandMenuAndHighlightOption('li-pago');
 
             $('#datatable-basic').DataTable({
                 language: {

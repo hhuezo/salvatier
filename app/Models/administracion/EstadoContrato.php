@@ -5,11 +5,10 @@ namespace App\Models\administracion;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EstadoServicio extends Model
+class EstadoContrato extends Model
 {
     use HasFactory;
-
-    protected $table = 'estado_servicio';
+     protected $table = 'estado_contrato';
 
     protected $fillable = [
         'nombre',
@@ -17,6 +16,6 @@ class EstadoServicio extends Model
 
     public function servicios()
     {
-        return $this->hasMany(Servicio::class, 'estado_servicio_id');
+        return $this->hasMany(Contrato::class, 'estado_contrato_id');
     }
 }

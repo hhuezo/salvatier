@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\administracion\Empresa;
 use App\Models\administracion\Oficina;
 use App\Models\administracion\Pago;
-use App\Models\administracion\Servicio;
+use App\Models\administracion\contrato;
 use App\Models\administracion\TipoPago;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -15,16 +15,16 @@ class PagoController extends Controller
 {
     public function index()
     {
-        $servicios = Servicio::with(['empresa', 'oficina', 'tipo_pago'])->get();
+        $contratos = contrato::with(['empresa', 'oficina', 'tipo_pago'])->get();
 
-        return view('administracion.servicio.index', compact('servicios'));
+        return view('administracion.contrato.index', compact('contratos'));
     }
     public function create()
     {
         $empresas = Empresa::where('activo', 1)->get();
         $oficinas = Oficina::where('activo', 1)->get();
         $tipos_pago = TipoPago::where('activo', 1)->get();
-        return view('administracion.servicio.create', compact('empresas', 'oficinas', 'tipos_pago'));
+        return view('administracion.contrato.create', compact('empresas', 'oficinas', 'tipos_pago'));
     }
 
 
@@ -130,7 +130,7 @@ class PagoController extends Controller
 
 
 
-        return view('administracion.servicio.detalle', [
+        return view('administracion.contrato.detalle', [
             'pagos' => $pagos,
             'monto_contratado' => $montoContratado,
             'primer_abono' => $primerAbono,
@@ -142,7 +142,7 @@ class PagoController extends Controller
 
 
 
-    public function servicio_store(Request $request)
+    public function contrato_store(Request $request)
     {
         $messages = [
             'fecha_contrato.required' => 'La fecha de contrato es obligatoria.',
@@ -190,47 +190,47 @@ class PagoController extends Controller
             },
         ], $messages);
 
-        $servicio = new Servicio();
-        $servicio->fecha_contrato = $request->fecha_contrato;
-        $servicio->empresa_id = $request->empresa_id;
-        $servicio->oficina_id = $request->oficina_id;
-        $servicio->tipo_pago_id = $request->tipo_pago_id;
-        $servicio->estado_servicio_id = 1;
-        $servicio->monto_contratado = $request->monto_contratado;
-        $servicio->primer_abono = $request->primer_abono;
-        $servicio->pago_minimo = $request->pago_minimo;
-        $servicio->detalle = $request->detalle;
-        $servicio->numero_cuotas = $request->numero_cuotas;
-        $servicio->usuario_creador = auth()->user()->id ?? null;
-        $servicio->save();
+        $contrato = new contrato();
+        $contrato->fecha_contrato = $request->fecha_contrato;
+        $contrato->empresa_id = $request->empresa_id;
+        $contrato->oficina_id = $request->oficina_id;
+        $contrato->tipo_pago_id = $request->tipo_pago_id;
+        $contrato->estado_contrato_id = 1;
+        $contrato->monto_contratado = $request->monto_contratado;
+        $contrato->primer_abono = $request->primer_abono;
+        $contrato->pago_minimo = $request->pago_minimo;
+        $contrato->detalle = $request->detalle;
+        $contrato->numero_cuotas = $request->numero_cuotas;
+        $contrato->usuario_creador = auth()->user()->id ?? null;
+        $contrato->save();
 
-        if (in_array($servicio->tipo_pago_id, [2, 3, 4])) {
-            $montoRestante = $servicio->monto_contratado - ($servicio->primer_abono ?? 0);
-            $numeroCuotas = max(1, $servicio->numero_cuotas);
+        if (in_array($contrato->tipo_pago_id, [2, 3, 4])) {
+            $montoRestante = $contrato->monto_contratado - ($contrato->primer_abono ?? 0);
+            $numeroCuotas = max(1, $contrato->numero_cuotas);
             $valorCuota = round($montoRestante / $numeroCuotas, 2);
-            $fechaPago = Carbon::parse($servicio->fecha_primer_pago);
+            $fechaPago = Carbon::parse($contrato->fecha_primer_pago);
             $pagos = [];
 
-            if ($servicio->tipo_pago_id == 3) {
+            if ($contrato->tipo_pago_id == 3) {
                 $diaDeseado = $fechaPago->day;
                 for ($i = 1; $i <= $numeroCuotas; $i++) {
                     $pagos[] = [
                         'numero' => $i,
                         'fecha' => $fechaPago->format('Y-m-d'),
                         'cantidad' => $valorCuota,
-                        'servicio_id' => $servicio->id,
+                        'contrato_id' => $contrato->id,
                         'usuario_creador' => auth()->user()->id ?? null,
                     ];
                     $fechaPago = $fechaPago->copy()->addMonthNoOverflow();
                     $ultimoDiaMes = $fechaPago->copy()->endOfMonth()->day;
                     $fechaPago->day = min($diaDeseado, $ultimoDiaMes);
                 }
-            } elseif ($servicio->tipo_pago_id == 2) {
+            } elseif ($contrato->tipo_pago_id == 2) {
                 $pagos[] = [
                     'numero' => 1,
                     'fecha' => $fechaPago->format('Y-m-d'),
                     'cantidad' => $valorCuota,
-                    'servicio_id' => $servicio->id,
+                    'contrato_id' => $contrato->id,
                     'usuario_creador' => auth()->user()->id ?? null,
                 ];
                 $fechaSiguiente = $fechaPago->copy();
@@ -244,19 +244,19 @@ class PagoController extends Controller
                         'numero' => $i,
                         'fecha' => $fechaSiguiente->format('Y-m-d'),
                         'cantidad' => $valorCuota,
-                        'servicio_id' => $servicio->id,
+                        'contrato_id' => $contrato->id,
                         'usuario_creador' => auth()->user()->id ?? null,
                     ];
                     $fechaSiguiente = $fechaSiguiente->copy()->addMonthNoOverflow()->endOfMonth();
                 }
-            } elseif ($servicio->tipo_pago_id == 4) {
+            } elseif ($contrato->tipo_pago_id == 4) {
                 $diaDeseado = $fechaPago->day;
                 for ($i = 1; $i <= $numeroCuotas; $i++) {
                     $pagos[] = [
                         'numero' => $i,
                         'fecha' => $fechaPago->format('Y-m-d'),
                         'cantidad' => $valorCuota,
-                        'servicio_id' => $servicio->id,
+                        'contrato_id' => $contrato->id,
                         'usuario_creador' => auth()->user()->id ?? null,
                     ];
                     $fechaPago = $fechaPago->copy()->addMonthsNoOverflow(3);
@@ -270,22 +270,22 @@ class PagoController extends Controller
         }
 
         return redirect()
-            ->route('servicio.show', ['id' => $servicio->id])
-            ->with('success', 'Servicio guardado correctamente.');
+            ->route('contrato.show', ['id' => $contrato->id])
+            ->with('success', 'contrato guardado correctamente.');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'servicio_id' => 'required|exists:servicio,id',
+            'contrato_id' => 'required|exists:contrato,id',
             'numero'      => 'required|numeric',
             'fecha'       => 'required|date',
             'cantidad'    => 'required|numeric|min:0.01',
             'finalizado'  => 'nullable|boolean',
             'observacion' => 'nullable|string|max:500',
         ], [
-            'servicio_id.required' => 'El pago debe estar asociado a un servicio.',
-            'servicio_id.exists'   => 'El servicio seleccionado no existe.',
+            'contrato_id.required' => 'El pago debe estar asociado a un contrato.',
+            'contrato_id.exists'   => 'El contrato seleccionado no existe.',
 
             'numero.required'      => 'El número del pago es obligatorio.',
             'numero.numeric'       => 'El número debe ser un valor numérico.',
@@ -304,7 +304,7 @@ class PagoController extends Controller
         ]);
 
         $pago = new Pago();
-        $pago->servicio_id  = $request->servicio_id;
+        $pago->contrato_id  = $request->contrato_id;
         $pago->numero       = $request->numero;
         $pago->fecha        = $request->fecha;
         $pago->cantidad     = $request->cantidad;
@@ -316,13 +316,6 @@ class PagoController extends Controller
         return back()->with('success', 'Pago registrado correctamente.');
     }
 
-
-    public function servicio_show($id)
-    {
-        $servicio = Servicio::findOrFail($id);
-
-        return view('administracion.servicio.show', compact('servicio'));
-    }
 
     public function update(Request $request, $id)
     {

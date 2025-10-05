@@ -144,7 +144,7 @@
                         </p>
 
                         <div class="card-footer text-end">
-                            <button class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></button>
+                            <a href="{{ route('mis_notificaiones') }}" class="btn btn-primary">Ver <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>

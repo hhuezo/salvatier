@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\administracion\Asesoria;
 use App\Models\administracion\AsesoriaHistorial;
 use App\Models\administracion\ModoAsesoria;
+use App\Models\administracion\Notificacion;
 use App\Models\administracion\TipoAsesoria;
 use App\Models\seguridad\Configuracion;
 use Carbon\Carbon;
@@ -277,8 +278,26 @@ class AsesoriaUsuarioController extends Controller
         return view('usuario.sucursales');
     }
 
-    public function destroy(string $id)
+
+    public function mis_notificaiones()
     {
-        //
+        $notificaciones = Notificacion::whereHas('asesoria', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->orderBy('fecha','desc')->get();
+        return view('usuario.mis_notificaiones', compact('notificaciones'));
+    }
+
+    public function mis_notificaiones_leido($id)
+    {
+        $notificacion = Notificacion::findOrFail($id);
+
+        // Alternar el valor de 'leido'
+        $notificacion->leido = !$notificacion->leido;
+        $notificacion->save();
+
+        return response()->json([
+            'success' => true,
+            'leido' => $notificacion->leido
+        ]);
     }
 }

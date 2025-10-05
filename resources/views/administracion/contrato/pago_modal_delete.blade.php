@@ -7,7 +7,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
             </div>
 
-            <form method="POST" action="{{ url('administracion/pago/' . $pago->id) }}">
+            <form method="POST" action="{{ route('pago.destroy',$pago->id) }}">
                 @csrf
                 @method('DELETE')
                 <div class="modal-body">

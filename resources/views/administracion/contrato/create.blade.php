@@ -18,10 +18,10 @@
         <div class="card custom-card">
             <div class="card-header justify-content-between">
                 <div class="card-title">
-                    Nuevo servicio
+                    Nuevo contrato
                 </div>
                 <div class="prism-toggle">
-                    <a href="{{ route('pago.index') }}">
+                    <a href="{{ route('contrato.index') }}">
                         <button class="btn btn-primary"><i class="bi bi-arrow-90deg-left"></i></button>
                     </a>
                 </div>
@@ -40,7 +40,7 @@
 
                 <div id="errorMessages"></div>
 
-                <form method="POST" action="{{ route('servicio.store') }}" id="form">
+                <form method="POST" action="{{ route('contrato.store') }}" id="form">
                     @csrf
                     <div class="row gy-3">
                         <div class="col-md-3">

@@ -39,5 +39,12 @@ class CatalogosSeeder extends Seeder
             ['nombre' => 'Al finalizar', 'activo' => 1],
             ['nombre' => 'Según avance', 'activo' => 1],
         ]);
+
+
+          DB::table('estado_contrato')->insert([
+            ['nombre' => 'Registrado'],
+            ['nombre' => 'Finalizado'],
+            ['nombre' => 'Anulado'],
+        ]);
     }
 }

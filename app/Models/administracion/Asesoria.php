@@ -52,4 +52,9 @@ class Asesoria extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+     public function notificaciones()
+    {
+        return $this->hasMany(Notificacion::class, 'asesoria_id');
+    }
 }

@@ -20,11 +20,9 @@
             <div class="card custom-card">
                 <div class="card-header justify-content-between">
                     <div class="card-title">
-                        Gestionar servicios
+                        Mis notificaciones
                     </div>
-                    <div class="prism-toggle">
-                        <a href="{{ route('pago.create') }}" class="btn btn-primary">Agregar</a>
-                    </div>
+
                 </div>
                 <div class="card-body">
 
@@ -54,63 +52,57 @@
                         <table id="datatable-basic" class="table table-striped text-nowrap w-100">
                             <thead class="table-dark">
                                 <tr>
-                                    <th>Opciones</th>
                                     <th>#</th>
-                                    <th>Empresa</th>
-                                    <th>Oficina</th>
-                                    <th>Monto contratado</th>
-                                    <th>Primer abono</th>
-                                    <th>Pago mínimo</th>
-                                    <th>Número de cuotas</th>
-                                    <th>Tipo pago</th>
-                                    <th>Detalle</th>
-                                    <th>Fecha contrato</th>
-                                    <th>Estado</th>
+                                    <th>Asesoría</th>
+                                    <th>Mensaje</th>
+                                    <th>Fecha</th>
+                                    <th>Archivo</th>
+                                    <th>Marcar como leído</th>
+                                    {{-- <th>Ir a asesoria</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($servicios as $item)
+                                @foreach ($notificaciones as $item)
                                     <tr>
-                                        <td style="text-align: center">
-                                            <a href="{{ route('servicio.show', $item) }}"
-                                                class="btn btn-sm btn-info btn-wave">
-                                                <i class="bi bi-eye-fill"></i>
-                                            </a>
-                                        </td>
-                                        <td>{{ $item->id }}</td>
-                                        <td>{{ $item->empresa->nombre ?? '-' }}</td>
-                                        <td>{{ $item->oficina->nombre ?? '-' }}</td>
-                                        <td>${{ number_format($item->monto_contratado, 2) }}</td>
-                                        <td>{{ $item->primer_abono ? '$' . number_format($item->primer_abono, 2) : '-' }}
-                                        </td>
-                                        <td>{{ $item->pago_minimo ? '$' . number_format($item->pago_minimo, 2) : '-' }}
-                                        </td>
-                                        <td>{{ $item->numero_cuotas ?? '-' }}</td>
-                                        <td>{{ $item->tipo_pago->nombre ?? '-' }}</td>
-                                        <td>{{ $item->detalle ?? '-' }}</td>
-                                        <td>{{ $item->fecha_contrato ? \Carbon\Carbon::parse($item->fecha_contrato)->format('d/m/Y') : '-' }}
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->asesoria->descripcion ?? '-' }}</td>
+                                        <td>{{ $item->mensaje }}</td>
+                                        <td>{{ $item->fecha ? \Carbon\Carbon::parse($item->fecha)->format('d/m/Y') : '-' }}
                                         </td>
                                         <td>
-                                            @if ($item->estado_servicio_id)
-                                                @php
-                                                    $color = match ($item->estado_servicio_id) {
-                                                        1 => 'info',
-                                                        2 => 'success',
-                                                        3 => 'danger',
-                                                        default => 'secondary',
-                                                    };
-                                                @endphp
-                                                <button
-                                                    class="btn btn-sm btn-{{ $color }}">{{ $item->estado_servicio->nombre }}</button>
+                                            @if ($item->archivo)
+                                                <a href="{{ asset('storage/notificaciones/' . $item->archivo) }}"
+                                                    target="_blank" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-paperclip"></i> Ver
+                                                </a>
                                             @else
-                                                <button class="btn btn-sm btn-secondary">-</button>
+                                                -
                                             @endif
                                         </td>
+
+                                        <td>
+                                            <div class="form-check form-switch" style="zoom: 1.5;">
+                                                <input class="form-check-input" type="checkbox"
+                                                    id="leidoSwitch{{ $item->id }}"
+                                                    {{ $item->leido ? 'checked' : '' }}
+                                                    onchange="toggleLeido({{ $item->id }})">
+                                                <label class="form-check-label"
+                                                    for="leidoSwitch{{ $item->id }}"></label>
+                                            </div>
+                                        </td>
+                                        {{-- <td>
+                                            <a href="{{ url('usuario/asesoria', $item->id) }}"
+                                                class="btn btn-primary d-inline-flex align-items-center justify-content-center">
+                                                <i class="bi bi-eye-fill"></i>
+                                            </a>
+                                        </td> --}}
+
 
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+
 
 
                     </div>
@@ -125,14 +117,13 @@
 
 
 
-
     <script src="{{ asset('assets/libs/dataTables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/libs/dataTables/dataTables.bootstrap5.min.js') }}"></script>
 
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-pago');
+            expandMenuAndHighlightOption('li-mis-notificaciones');
 
             $('#datatable-basic').DataTable({
                 language: {
@@ -168,6 +159,34 @@
 
 
         });
+
+
+
+
+        function toggleLeido(id) {
+            // Generar URL usando la ruta nombrada y reemplazar ID
+            let url = "{{ route('mis_notificaiones_leido', ['id' => 'ID_REEMPLAZAR']) }}";
+            url = url.replace('ID_REEMPLAZAR', id);
+
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({}) // si necesitas enviar datos adicionales
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Notificación marcada como leída');
+                    } else {
+                        console.error('Error al marcar como leído');
+                    }
+                })
+                .catch(error => console.error(error));
+        }
     </script>
     <!-- End:: row-1 -->
 @endsection

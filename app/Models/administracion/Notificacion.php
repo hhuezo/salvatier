@@ -13,16 +13,23 @@ class Notificacion extends Model
     protected $table = 'notificacion';
 
     protected $fillable = [
+        'asesoria_id',
         'user_id',
         'mensaje',
         'archivo',
-        'criticidad',
-        'activo',
+        'fecha',
+        'leido',
     ];
 
     // Relación con el usuario
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+
+    public function asesoria()
+    {
+        return $this->belongsTo(Asesoria::class, 'asesoria_id');
     }
 }

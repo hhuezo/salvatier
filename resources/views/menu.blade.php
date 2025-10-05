@@ -375,8 +375,8 @@
                         @endcan
 
                         @can('menu gestion de pagos')
-                            <li class="slide" id="li-pago">
-                                <a href="{{ route('pago.index') }}" class="side-menu__item">
+                            <li class="slide" id="li-contrato">
+                                <a href="{{ route('contrato.index') }}" class="side-menu__item">
                                     <i class="bi bi-currency-dollar w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Gestion de pagos</span>
                                 </a>
@@ -385,7 +385,7 @@
 
                         @can('menu notificaciones')
                             <li class="slide" id="li-notificacion">
-                                <a href="{{ url('administracion/notificacion') }}" class="side-menu__item">
+                                <a href="{{ route('notificacion.index') }}" class="side-menu__item">
                                     <i class="bi bi-bell w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Notificaciones</span>
                                 </a>
@@ -421,7 +421,7 @@
                         @endcan
 
                         @can('menu mis asesorias')
-                            <li class="slide">
+                            <li class="slide" id="li-mis-asesorias">
                                 <a href="{{ url('usuario/asesoria') }}" class="side-menu__item">
                                     <i class="bi bi-card-checklist w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Mis asesorias</span>
@@ -434,6 +434,15 @@
                                 <a href="{{ url('usuario/pago/create') }}" class="side-menu__item">
                                     <i class="bi bi-currency-dollar w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Pagos</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu mis notificaciones')
+                            <li class="slide" id="li-mis-notificaciones">
+                                <a href="{{ route('mis_notificaiones') }}" class="side-menu__item">
+                                    <i class="bi bi-bell w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Mis notificaciones</span>
                                 </a>
                             </li>
                         @endcan

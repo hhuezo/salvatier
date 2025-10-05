@@ -208,7 +208,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-asesoria');
+            expandMenuAndHighlightOption('li-mis-asesorias');
 
             $('#datatable-basic').DataTable({
                 language: {

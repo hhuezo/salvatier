@@ -82,23 +82,6 @@ return new class extends Migration
         });
 
 
-
-        Schema::create('notificacion', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->date('fecha');
-            $table->string('mensaje', 300);
-            $table->string('archivo', 150)->nullable();
-            $table->integer('criticidad')->default(1);
-            $table->integer('activo')->default(1);
-            $table->timestamps();
-
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->restrictOnDelete()
-                ->restrictOnUpdate();
-        });
     }
 
     /**
@@ -111,7 +94,6 @@ return new class extends Migration
         Schema::dropIfExists('tipo_asesoria');
         Schema::dropIfExists('modo_asesoria');
         Schema::dropIfExists('estado_asesoria');
-        Schema::dropIfExists('notificacion');
         Schema::dropIfExists('configuracion');
     }
 };
