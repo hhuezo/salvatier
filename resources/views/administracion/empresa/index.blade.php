@@ -59,6 +59,7 @@
                                     <th>Nombre</th>
                                     <th>Direccion</th>
                                     <th>Telefono</th>
+                                    <th>Activo</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
@@ -67,7 +68,7 @@
                                     <tr>
                                         <td>{{ $item->id }}</td>
                                         <td>{{ $item->nombre }}</td>
-                                        <td>${{ $item->direccion }} </td>
+                                        <td>{{ $item->direccion }} </td>
                                         <td>{{ $item->telefono }}</td>
 
                                         <td><label class="switch">
@@ -101,10 +102,10 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="createModoAsesoriaLabel">Crear modo de asesoría</h6>
+                    <h6 class="modal-title" id="createModoAsesoriaLabel">Crear empresa</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
-                <form method="POST" action="{{ route('modo_asesoria.store') }}">
+                <form method="POST" action="{{ route('empresa.store') }}">
                     @csrf
                     <div class="modal-body">
                         <div class="row gy-4">
@@ -115,9 +116,13 @@
                             </div>
 
                             <div class="col-12">
-                                <label class="form-label">Costo</label>
-                                <input type="number" class="form-control" name="costo" value="{{ old('costo') }}"
-                                    step="0.01" min="0" required>
+                                <label class="form-label">Direccion</label>
+                                <textarea name="direccion" class="form-control" required>{{ old('direccion') }}</textarea>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Telefono</label>
+                                <input type="text" class="form-control" name="telefono" value="{{ old('telefono') }}"
+                                    required>
                             </div>
                         </div>
                     </div>

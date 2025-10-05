@@ -3,10 +3,12 @@
 use App\Http\Controllers\administracion\AbogadoController;
 use App\Http\Controllers\administracion\AsesoriaController;
 use App\Http\Controllers\administracion\ContratoController;
+use App\Http\Controllers\administracion\EmpresaController;
+use App\Http\Controllers\administracion\EncargadoPagoController;
 use App\Http\Controllers\Administracion\ModoAsesoriaController;
 use App\Http\Controllers\administracion\NotificacionController;
+use App\Http\Controllers\administracion\OficinaController;
 use App\Http\Controllers\administracion\PagoController;
-use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
 use App\Http\Controllers\seguridad\UserController;
@@ -65,6 +67,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('contrato', ContratoController::class);
     Route::get('administracion/pago/previsualizacion', [PagoController::class, 'previsualizacion'])->name('pago.previsualizacion');
     Route::resource('pago', PagoController::class);
+    Route::resource('empresa', EmpresaController::class);
+    Route::resource('encargado_pago', EncargadoPagoController::class);
+     Route::resource('oficina', OficinaController::class);
 
     /*Route::get('administracion/servicio_show/{id}', [PagoController::class, 'servicio_show'])->name('servicio.show');
     Route::get('administracion/pago/previsualizacion', [PagoController::class, 'previsualizacion'])->name('pago.previsualizacion');
