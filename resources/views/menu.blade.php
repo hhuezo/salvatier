@@ -374,9 +374,19 @@
                             </li>
                         @endcan
 
-                        @can('menu gestion de pagos')
+
+                         @can('menu gestion de pagos')
                             <li class="slide" id="li-contrato">
                                 <a href="{{ route('contrato.index') }}" class="side-menu__item">
+                                    <i class="bi bi-folder2  w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Contratos</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('menu gestion de pagos')
+                            <li class="slide" id="li-contrato">
+                                <a href="{{ route('pago.index') }}" class="side-menu__item">
                                     <i class="bi bi-currency-dollar w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Gestion de pagos</span>
                                 </a>

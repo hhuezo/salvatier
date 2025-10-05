@@ -13,11 +13,24 @@ use Illuminate\Http\Request;
 
 class PagoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $contratos = contrato::with(['empresa', 'oficina', 'tipo_pago'])->get();
+        // Fecha de inicio: primer día del mes dos meses antes
+        $fechaInicio = $request->fechaInicio
+            ? Carbon::parse($request->fechaInicio)->format('Y-m-d')
+            : Carbon::now()->subMonths(2)->startOfMonth()->format('Y-m-d');
 
-        return view('administracion.contrato.index', compact('contratos'));
+        // Fecha final: último día del mes actual
+        $fechaFinal = $request->fechaFinal
+            ? Carbon::parse($request->fechaFinal)->format('Y-m-d')
+            : Carbon::now()->endOfMonth()->format('Y-m-d');
+
+        // Obtener pagos dentro del rango
+        $pagos = Pago::with(['contrato', 'usuario'])
+            ->whereBetween('fecha', [$fechaInicio, $fechaFinal])
+            ->get();
+
+        return view('administracion.contrato.pago', compact('pagos', 'fechaInicio', 'fechaFinal'));
     }
     public function create()
     {

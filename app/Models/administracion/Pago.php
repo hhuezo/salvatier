@@ -21,7 +21,7 @@ class Pago extends Model
         'usuario_creador',
     ];
 
-    public function servicio()
+    public function contrato()
     {
         return $this->belongsTo(Contrato::class, 'contrato_id');
     }
