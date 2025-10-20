@@ -10,10 +10,12 @@ use App\Models\administracion\Notificacion;
 use App\Models\administracion\TipoAsesoria;
 use App\Models\seguridad\Configuracion;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AsesoriaUsuarioController extends Controller
 {
@@ -240,6 +242,32 @@ class AsesoriaUsuarioController extends Controller
                 return redirect()->back()->with('error', 'No se encontró la transacción.');
             }
 
+            // ===== Envío de correo =====
+            $emailDestino = $asesoria->user->email ?? null;
+            $nombreCliente = trim(($asesoria->user->name ?? '') . ' ' . ($asesoria->user->lastname ?? '')) ?: 'Cliente';
+
+            // Asegurar que la configuración regional esté en español
+            Carbon::setLocale('es');
+
+            // Combinar fecha y hora
+            $fechaCompleta = Carbon::parse("{$asesoria->fecha} {$asesoria->hora}");
+
+            // Ejemplo: "Lunes 21 de octubre de 2025 a las 10:30 a.m."
+            $fechaFormateada = $fechaCompleta->translatedFormat('l j \\d\\e F \\d\\e Y \\a \\l\\a\\s g:i a');
+
+            if ($emailDestino) {
+                try {
+                    Mail::send('emails.confirmacion_cita', ['cliente' => $nombreCliente, 'fecha' => $fechaFormateada], function ($message) use ($emailDestino) {
+                        $message->to($emailDestino)
+                            ->subject('📅 Confirmación pendiente de cita agendada');
+                    });
+                } catch (Exception $e) {
+                    Log::error("Fallo al enviar el correo de notificación: " . $e->getMessage());
+                }
+            } else {
+                Log::warning("No se envió correo: la asesoría no tiene un usuario con email válido.");
+            }
+
             return view('usuario.asesoria.pago_finalizado', compact('asesoria'));
         } catch (\Exception $e) {
             // Manejo de error: log y redirección
@@ -283,7 +311,7 @@ class AsesoriaUsuarioController extends Controller
     {
         $notificaciones = Notificacion::whereHas('asesoria', function ($query) {
             $query->where('user_id', auth()->id());
-        })->orderBy('fecha','desc')->get();
+        })->orderBy('fecha', 'desc')->get();
         return view('usuario.mis_notificaiones', compact('notificaciones'));
     }
 

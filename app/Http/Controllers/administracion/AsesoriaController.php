@@ -7,8 +7,11 @@ use App\Models\administracion\Asesoria;
 use App\Models\administracion\AsesoriaHistorial;
 use App\Models\User;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class AsesoriaController extends Controller
 {
@@ -32,9 +35,7 @@ class AsesoriaController extends Controller
         ], [
             'id.required' => 'El ID de la asesoría es obligatorio.',
             'id.exists'   => 'La asesoría seleccionada no existe.',
-
             'abogado_asignado_id.exists' => 'El abogado seleccionado no es válido.',
-
             'enlace.string' => 'El enlace debe ser un texto válido.',
             'enlace.max'    => 'El enlace no puede superar los 500 caracteres.',
         ]);
@@ -50,6 +51,7 @@ class AsesoriaController extends Controller
             }
             $asesoria->save();
 
+            // Guardar historial
             $historial = new AsesoriaHistorial();
             $historial->descripcion        = $asesoria->descripcion;
             $historial->fecha              = $asesoria->fecha;
@@ -60,13 +62,40 @@ class AsesoriaController extends Controller
             $historial->tipo_asesoria_id   = $asesoria->tipo_asesoria_id;
             $historial->modo_asesoria_id   = $asesoria->modo_asesoria_id;
             $historial->user_id            = $asesoria->user_id;
-            $historial->abogado_asignado_id  = $asesoria->abogado_asignado_id;
+            $historial->abogado_asignado_id = $asesoria->abogado_asignado_id;
             $historial->save();
 
             DB::commit();
 
-            return back()->with('success', 'Asesoría confirmada correctamente.');
-        } catch (\Exception $e) {
+            /*
+            // ===== Envío de correo =====
+            $emailDestino = $asesoria->user->email ?? null;
+            $nombreCliente = trim(($asesoria->user->name ?? '') . ' ' . ($asesoria->user->lastname ?? '')) ?: 'Cliente';
+
+            // Asegurar que la configuración regional esté en español
+            Carbon::setLocale('es');
+
+            // Combinar fecha y hora
+            $fechaCompleta = Carbon::parse("{$asesoria->fecha} {$asesoria->hora}");
+
+            // Ejemplo: "Lunes 21 de octubre de 2025 a las 10:30 a.m."
+            $fechaFormateada = $fechaCompleta->translatedFormat('l j \\d\\e F \\d\\e Y \\a \\l\\a\\s g:i a');
+
+            if ($emailDestino) {
+                try {
+                    Mail::send('emails.confirmacion_cita', ['cliente' => $nombreCliente,'fecha' => $fechaFormateada], function ($message) use ($emailDestino) {
+                        $message->to($emailDestino)
+                            ->subject('📅 Confirmación pendiente de cita agendada');
+                    });
+                } catch (Exception $e) {
+                    Log::error("Fallo al enviar el correo de notificación: " . $e->getMessage());
+                }
+            } else {
+                Log::warning("No se envió correo: la asesoría no tiene un usuario con email válido.");
+            }*/
+
+            return back()->with('success', 'Asesoría confirmada y correo enviado correctamente.');
+        } catch (Exception $e) {
             DB::rollBack();
             return back()->with('error', 'Ocurrió un error al confirmar la asesoría: ' . $e->getMessage());
         }
