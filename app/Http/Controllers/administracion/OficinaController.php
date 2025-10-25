@@ -15,15 +15,6 @@ class OficinaController extends Controller
     {
         $oficina = Oficina::get();
         return view('administracion.oficina.index', compact('oficina'));
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -35,17 +26,11 @@ class OficinaController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:50',
+            'telefono' => 'nullable|string|max:50',
+            'ubicacion' => 'nullable|string|max:150',
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.string' => 'El nombre debe ser un texto válido.',
-            'nombre.max' => 'El nombre no puede exceder 255 caracteres.',
             'direccion.required' => 'La dirección es obligatoria.',
-            'direccion.string' => 'La dirección debe ser un texto válido.',
-            'direccion.max' => 'La dirección no puede exceder 255 caracteres.',
-            'telefono.required' => 'El teléfono es obligatorio.',
-            'telefono.string' => 'El teléfono debe ser un texto válido.',
-            'telefono.max' => 'El teléfono no puede exceder 50 caracteres.',
         ]);
 
         // Guardar en la base de datos
@@ -53,27 +38,11 @@ class OficinaController extends Controller
         $oficina->nombre = $request->nombre;
         $oficina->direccion = $request->direccion;
         $oficina->telefono = $request->telefono;
+        $oficina->ubicacion = $request->ubicacion;
         $oficina->save();
 
         // Redirigir con mensaje de éxito
         return redirect()->route('oficina.index')->with('success', 'Oficina registrada correctamente.');
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -85,36 +54,21 @@ class OficinaController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'direccion' => 'required|string|max:255',
-            'telefono' => 'required|string|max:50',
+            'telefono' => 'nullable|string|max:50',
+            'ubicacion' => 'nullable|string|max:150',
         ], [
             'nombre.required' => 'El nombre es obligatorio.',
-            'nombre.string' => 'El nombre debe ser un texto válido.',
-            'nombre.max' => 'El nombre no puede exceder 255 caracteres.',
             'direccion.required' => 'La dirección es obligatoria.',
-            'direccion.string' => 'La dirección debe ser un texto válido.',
-            'direccion.max' => 'La dirección no puede exceder 255 caracteres.',
-            'telefono.required' => 'El teléfono es obligatorio.',
-            'telefono.string' => 'El teléfono debe ser un texto válido.',
-            'telefono.max' => 'El teléfono no puede exceder 50 caracteres.',
         ]);
 
-        // Guardar en la base de datos
+        // Actualizar registro
         $oficina = Oficina::findOrFail($id);
         $oficina->nombre = $request->nombre;
         $oficina->direccion = $request->direccion;
         $oficina->telefono = $request->telefono;
+        $oficina->ubicacion = $request->ubicacion;
         $oficina->save();
 
-        // Redirigir con mensaje de éxito
         return redirect()->route('oficina.index')->with('success', 'Oficina modificada correctamente.');
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }
