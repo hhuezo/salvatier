@@ -362,6 +362,29 @@
                                     <span class="side-menu__label">Abogados</span>
                                 </a>
                             </li>
+
+
+                            <li class="slide" id="li-empresa">
+                                <a href="{{ url('empresa') }}" class="side-menu__item">
+                                    <i class="bi bi-briefcase w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Empresas</span>
+                                </a>
+                            </li>
+
+
+                            <li class="slide" id="li-encargado-pago">
+                                <a href="{{ url('encargado_pago') }}" class="side-menu__item">
+                                    <i class="bi bi-person-check w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Encargado pago</span>
+                                </a>
+                            </li>
+
+                            <li class="slide" id="li-oficina">
+                                <a href="{{ url('oficina') }}" class="side-menu__item">
+                                    <i class="bi bi-building w-6 h-6 side-menu__icon"></i>
+                                    <span class="side-menu__label">Oficina</span>
+                                </a>
+                            </li>
                         @endcan
 
 
@@ -375,7 +398,7 @@
                         @endcan
 
 
-                         @can('menu gestion de pagos')
+                        @can('menu gestion de pagos')
                             <li class="slide" id="li-contrato">
                                 <a href="{{ route('contrato.index') }}" class="side-menu__item">
                                     <i class="bi bi-folder2  w-6 h-6 side-menu__icon"></i>
@@ -394,22 +417,15 @@
                         @endcan
 
                         @can('menu notificaciones')
-                            <li class="slide" id="li-notificacion">
+                            {{-- <li class="slide" id="li-notificacion">
                                 <a href="{{ route('notificacion.index') }}" class="side-menu__item">
                                     <i class="bi bi-bell w-6 h-6 side-menu__icon"></i>
                                     <span class="side-menu__label">Notificaciones</span>
                                 </a>
-                            </li>
+                            </li> --}}
                         @endcan
 
-                        {{-- @can('menu gestionar de contenido')
-                            <li class="slide">
-                                <a href="widgets.html" class="side-menu__item">
-                                    <i class="bi bi-pen-fill w-6 h-6 side-menu__icon"></i>
-                                    <span class="side-menu__label">Gestionar de contenido</span>
-                                </a>
-                            </li>
-                        @endcan --}}
+
 
 
                         @can('menu sucursales')
