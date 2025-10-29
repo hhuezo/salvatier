@@ -13,6 +13,7 @@ use App\Http\Controllers\seguridad\PermissionController;
 use App\Http\Controllers\seguridad\RoleController;
 use App\Http\Controllers\seguridad\UserController;
 use App\Http\Controllers\usuario\AsesoriaUsuarioController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -27,9 +28,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('auth/login');
-});
+Route::get('/', [WelcomeController::class, 'index']);
 
 Auth::routes();
 
