@@ -38,33 +38,40 @@ class UserController extends Controller
         $validated = $request->validate(
             [
                 'name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:50',
-                'username' => 'required|string|max:50|unique:users,username',
+                'lastname' => 'required|string|max:50',
+                'email' => 'required|string|email|max:50|unique:users,email',
                 'password' => 'required|string|min:6',
                 'role_id' => 'required|exists:roles,id',
             ],
             [
+                // Name
                 'name.required' => 'El nombre es obligatorio.',
                 'name.string' => 'El nombre debe ser una cadena de texto.',
                 'name.max' => 'El nombre no debe superar los 255 caracteres.',
 
-                'last_name.required' => 'El apellido es obligatorio.',
-                'last_name.string' => 'El apellido debe ser una cadena de texto.',
-                'last_name.max' => 'El apellido no debe superar los 50 caracteres.',
+                // Last Name
+                'lastname.required' => 'El apellido es obligatorio.',
+                'lastname.string' => 'El apellido debe ser una cadena de texto.',
+                'lastname.max' => 'El apellido no debe superar los 50 caracteres.',
 
-                'username.required' => 'El nombre de usuario es obligatorio.',
-                'username.string' => 'El nombre de usuario debe ser una cadena de texto.',
-                'username.max' => 'El nombre de usuario no debe superar los 50 caracteres.',
-                'username.unique' => 'Este nombre de usuario ya está en uso.',
+                // Email
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.string' => 'El correo electrónico debe ser una cadena de texto.',
+                'email.email' => 'Debe ingresar un correo electrónico válido.',
+                'email.max' => 'El correo electrónico no debe superar los 50 caracteres.',
+                'email.unique' => 'Este correo electrónico ya está registrado.',
 
+                // Password
                 'password.required' => 'La contraseña es obligatoria.',
                 'password.string' => 'La contraseña debe ser una cadena de texto.',
                 'password.min' => 'La contraseña debe tener al menos 6 caracteres.',
 
+                // Role
                 'role_id.required' => 'El rol es obligatorio.',
                 'role_id.exists' => 'El rol seleccionado no existe.',
             ]
         );
+
 
         try {
             DB::beginTransaction();
@@ -72,10 +79,9 @@ class UserController extends Controller
             // Crear usuario
             $user = new User();
             $user->name = $validated['name'];
-            $user->last_name = $validated['last_name'];
-            $user->username = $validated['username'];
+            $user->lastname = $validated['lastname'];
+            $user->email = $validated['email'];
             $user->password = Hash::make($validated['password']);
-            $user->email = $validated['username'] . '@example.com';
             $user->active = 1;
             $user->save();
 
@@ -125,8 +131,8 @@ class UserController extends Controller
         $validated = $request->validate(
             [
                 'name' => 'required|string|max:255',
-                'last_name' => 'required|string|max:50',
-                'user_name' => 'required|string|max:50|unique:users,user_name,' . $id,
+                'lastname' => 'required|string|max:50',
+                'email' => 'required|string|max:50|unique:users,email,' . $id,
                 'role_id' => 'required|exists:roles,id',
             ],
             [
@@ -134,14 +140,16 @@ class UserController extends Controller
                 'name.string' => 'El nombre debe ser una cadena de texto.',
                 'name.max' => 'El nombre no debe superar los 255 caracteres.',
 
-                'last_name.required' => 'El apellido es obligatorio.',
-                'last_name.string' => 'El apellido debe ser una cadena de texto.',
-                'last_name.max' => 'El apellido no debe superar los 50 caracteres.',
+                'lastname.required' => 'El apellido es obligatorio.',
+                'lastname.string' => 'El apellido debe ser una cadena de texto.',
+                'lastname.max' => 'El apellido no debe superar los 50 caracteres.',
 
-                'user_name.required' => 'El nombre de usuario es obligatorio.',
-                'user_name.string' => 'El nombre de usuario debe ser una cadena de texto.',
-                'user_name.max' => 'El nombre de usuario no debe superar los 50 caracteres.',
-                'user_name.unique' => 'Este nombre de usuario ya está en uso.',
+                // Email
+                'email.required' => 'El correo electrónico es obligatorio.',
+                'email.string' => 'El correo electrónico debe ser una cadena de texto.',
+                'email.email' => 'Debe ingresar un correo electrónico válido.',
+                'email.max' => 'El correo electrónico no debe superar los 50 caracteres.',
+                'email.unique' => 'Este correo electrónico ya está registrado.',
 
                 'role_id.required' => 'El rol es obligatorio.',
                 'role_id.exists' => 'El rol seleccionado no existe.',
@@ -153,10 +161,8 @@ class UserController extends Controller
             DB::beginTransaction();
             $user = User::findOrFail($id);
             $user->name = $validated['name'];
-            $user->last_name = $validated['last_name'];
-            $user->user_name = $validated['user_name'];
-            $user->sales_percentage = $request->sales_percentage;
-            $user->collection_percentage = $request->collection_percentage;
+            $user->lastname = $validated['lastname'];
+            $user->email = $validated['email'];
             $user->save();
 
             // Asignar rol
@@ -227,21 +233,22 @@ class UserController extends Controller
         }
     }
 
-    public function configuracion() {
+    public function configuracion()
+    {
 
         $configuracion = Configuracion::first();
         return view('seguridad.usuario.configuracion', compact('configuracion'));
     }
 
-    public function configuracionStore(Request $request) {
+    public function configuracionStore(Request $request)
+    {
 
         $configuracion = Configuracion::first();
         $configuracion->costo_asesoria = $request->costo_asesoria;
         $configuracion->save();
 
 
-         // Retornar con mensaje de éxito
-            return back()->with('success', 'Registro actualizado correctamente.');
+        // Retornar con mensaje de éxito
+        return back()->with('success', 'Registro actualizado correctamente.');
     }
-
 }

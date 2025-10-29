@@ -121,13 +121,13 @@
 
                             <div class="col-12">
                                 <label class="form-label">Apellido</label>
-                                <input type="text" class="form-control" name="last_name" value="{{ old('last_name') }}"
+                                <input type="text" class="form-control" name="lastname" value="{{ old('lastname') }}"
                                     required>
                             </div>
 
                             <div class="col-12">
-                                <label class="form-label">Usuario</label>
-                                <input type="text" class="form-control" name="username" value="{{ old('username') }}"
+                                <label class="form-label">Correo electronico</label>
+                                <input type="email" class="form-control" name="email" value="{{ old('email') }}"
                                     required>
                             </div>
 
@@ -141,7 +141,7 @@
                                 <select class="form-select" name="role_id" required>
                                     @foreach ($roles as $rol)
                                         <option value="{{ $rol->id }}"
-                                            {{ old('role') == $rol->id ? 'selected' : '' }}>
+                                            {{ old('role_id') == $rol->id ? 'selected' : '' }}>
                                             {{ $rol->name }}
                                         </option>
                                     @endforeach
