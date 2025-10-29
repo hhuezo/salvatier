@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Administracion;
+namespace App\Http\Controllers\administracion;
 
 use App\Http\Controllers\Controller;
 use App\Models\administracion\ModoAsesoria;

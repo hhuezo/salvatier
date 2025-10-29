@@ -7,6 +7,7 @@ use App\Models\administracion\Asesoria;
 use App\Models\administracion\AsesoriaHistorial;
 use App\Models\administracion\ModoAsesoria;
 use App\Models\administracion\Notificacion;
+use App\Models\administracion\Oficina;
 use App\Models\administracion\TipoAsesoria;
 use App\Models\Configuracion;
 use Carbon\Carbon;
@@ -391,7 +392,8 @@ class AsesoriaUsuarioController extends Controller
 
     public function sucursales()
     {
-        return view('usuario.sucursales');
+        $oficinas = Oficina::get();
+        return view('usuario.sucursales', compact('oficinas'));
     }
 
 
