@@ -4,8 +4,10 @@ namespace App\Http\Controllers\administracion;
 
 use App\Http\Controllers\Controller;
 use App\Models\administracion\Notificacion;
+use App\Models\Configuracion;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -68,12 +70,21 @@ class NotificacionController extends Controller
         $notificacion->leido = false;
         $notificacion->save();
 
+        // ===== Obtener la URL base de la API desde la base de datos =====
+        $configuracion = Configuracion::first();
 
+        if (!$configuracion || empty($configuracion->detalle)) {
+            Log::error('❌ No se encontró la configuración de API backend en la base de datos.');
+            return redirect()->back()->with('error', 'No se pudo obtener la configuración del servicio de correo.');
+        }
 
+        $baseUrl = rtrim($configuracion->detalle, '/');
+
+        // ===== Envío de correo =====
         $emailDestino = $notificacion->asesoria->user->email ?? null;
 
         if ($emailDestino) {
-            $asuntoEmail = 'Notificacion sobre asesoria';
+            $asuntoEmail = 'Notificación sobre asesoría';
             $cuerpoEmail = $validated['mensaje'];
 
             // Generar la ruta completa solo si hay archivo
@@ -83,27 +94,54 @@ class NotificacionController extends Controller
             }
 
             try {
-                Mail::raw($cuerpoEmail, function ($message) use ($emailDestino, $asuntoEmail, $rutaCompletaArchivo) {
-                    $message->to($emailDestino)
-                        ->subject($asuntoEmail);
+                // Construir el cuerpo de la petición
+                $payload = [
+                    "to" => $emailDestino,
+                    "subject" => $asuntoEmail,
+                    "body" => $cuerpoEmail,
+                    "attachments" => []
+                ];
 
-                    if ($rutaCompletaArchivo && file_exists($rutaCompletaArchivo)) {
-                        $message->attach($rutaCompletaArchivo);
-                    }
-                });
-            } catch (Exception $e) {
-                Log::error("Fallo al enviar el correo de notificación: " . $e->getMessage());
+                // Adjuntar archivo si existe
+                if ($rutaCompletaArchivo && file_exists($rutaCompletaArchivo)) {
+                    $payload["attachments"][] = [
+                        "base64File" => base64_encode(file_get_contents($rutaCompletaArchivo)),
+                        "contentType" => mime_content_type($rutaCompletaArchivo),
+                        "name" => basename($rutaCompletaArchivo)
+                    ];
+                }
+
+                // Enviar petición HTTP a la API
+                $response = Http::withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ])->post($baseUrl . '/microsoft/send-mail', $payload);
+
+                // Verificar la respuesta
+                if ($response->successful()) {
+                    Log::info("📨 Correo enviado correctamente vía API Microsoft.", [
+                        'destinatario' => $emailDestino,
+                        'asunto' => $asuntoEmail,
+                    ]);
+                } else {
+                    Log::error("❌ Error al enviar correo vía API Microsoft.", [
+                        'status' => $response->status(),
+                        'respuesta' => $response->body(),
+                        'destinatario' => $emailDestino,
+                    ]);
+                }
+            } catch (\Exception $e) {
+                Log::error("⚠️ Excepción al enviar correo vía API: " . $e->getMessage());
             }
         } else {
             Log::warning("No se envió correo: la asesoría no tiene un usuario con email válido.");
         }
 
-
-
         return redirect()
             ->back()
             ->with('success', 'La notificación fue enviada correctamente.');
     }
+
 
 
 

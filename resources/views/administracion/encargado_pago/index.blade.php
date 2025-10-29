@@ -149,7 +149,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('seguridadMenu', 'usuarioOption');
+                expandMenuAndHighlightOption('li-encargado-pago');
 
             $('#datatable-basic').DataTable({
                 language: {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\seguridad;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,11 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Configuracion extends Model
 {
     use HasFactory;
-
-    protected $table = 'configuracion';
-    public $timestamps = false;
+     protected $table = 'configuraciones';
 
     protected $fillable = [
-        'costo_asesoria',
+        'descripcion',
+        'detalle',
     ];
 }

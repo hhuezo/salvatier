@@ -8,14 +8,13 @@ use App\Models\administracion\AsesoriaHistorial;
 use App\Models\administracion\ModoAsesoria;
 use App\Models\administracion\Notificacion;
 use App\Models\administracion\TipoAsesoria;
-use App\Models\seguridad\Configuracion;
+use App\Models\Configuracion;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class AsesoriaUsuarioController extends Controller
 {
@@ -97,35 +96,77 @@ class AsesoriaUsuarioController extends Controller
     {
         $asesoria = Asesoria::findOrFail($id);
 
-        // Consumir API de regiones
-        $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
+        // Obtener configuración del backend desde la base de datos
+        $configuracion = Configuracion::first();
 
-        $regiones = [];
-        if ($response->successful()) {
-            $regiones = $response->json();
+        if (!$configuracion || empty($configuracion->detalle)) {
+            Log::error('❌ No se encontró la configuración de API backend en la base de datos.');
+            return redirect()->back()->with('error', 'No se pudo obtener la configuración del servicio.');
+        }
+
+        $endpoint = rtrim($configuracion->detalle, '/') . '/wompi/regiones';
+
+        // Consumir API de regiones
+        try {
+            $response = Http::get($endpoint);
+
+            $regiones = $response->successful() ? $response->json() : [];
+            if (!$response->successful()) {
+                Log::error('⚠️ Error al consumir API de regiones.', [
+                    'status' => $response->status(),
+                    'endpoint' => $endpoint
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('⚠️ Excepción al conectar con API de regiones: ' . $e->getMessage());
+            $regiones = [];
         }
 
         return view('usuario.asesoria.pago', compact('asesoria', 'regiones'));
     }
 
 
+
     public function getTerritorio(string $id)
     {
-        $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
+        // Obtener configuración del backend desde la base de datos
+        $configuracion = Configuracion::first();
 
-        if ($response->successful()) {
-            $regiones = $response->json();
-
-            // Buscar la región con el id recibido
-            $region = collect($regiones)->firstWhere('id', $id);
-
-            if ($region && isset($region['territorios'])) {
-                return response()->json($region['territorios']);
-            }
+        if (!$configuracion || empty($configuracion->detalle)) {
+            Log::error('❌ No se encontró la configuración de API backend en la base de datos.');
+            return response()->json(['error' => 'No se pudo obtener la configuración del servicio.'], 500);
         }
 
+        // Construir endpoint completo
+        $endpoint = rtrim($configuracion->detalle, '/') . '/wompi/regiones';
+
+        try {
+            // Consumir API de regiones
+            $response = Http::get($endpoint);
+
+            if ($response->successful()) {
+                $regiones = $response->json();
+
+                // Buscar la región con el ID recibido
+                $region = collect($regiones)->firstWhere('id', $id);
+
+                if ($region && isset($region['territorios'])) {
+                    return response()->json($region['territorios']);
+                }
+            } else {
+                Log::error('⚠️ Error al consumir API de regiones.', [
+                    'status' => $response->status(),
+                    'endpoint' => $endpoint
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('⚠️ Excepción al conectar con API de regiones: ' . $e->getMessage());
+        }
+
+        // Si algo falla, devolver vacío con 404
         return response()->json([], 404);
     }
+
 
 
     public function pago(Request $request, $id)
@@ -146,29 +187,47 @@ class AsesoriaUsuarioController extends Controller
                 $anio += 2000;
             }
         } else {
-            // Default si no viene bien
             $mes  = 1;
             $anio = date('Y');
         }
 
+        // 2️⃣ Obtener configuración del backend desde la base de datos
+        $configuracion = Configuracion::first();
 
+        if (!$configuracion || empty($configuracion->detalle)) {
+            Log::error('❌ No se encontró la configuración de API backend en la base de datos.');
+            return back()->with('error', 'No se pudo obtener la configuración del servicio de pago.');
+        }
 
-        // 2️⃣ Llamar a la API de regiones
-        $response = Http::get('http://44.212.113.88:8081/api/wompi/regiones');
-        $regiones = $response->json();
+        $baseUrl = rtrim($configuracion->detalle, '/');
 
-        // 3️⃣ Buscar el país y territorio seleccionados
+        // 3️⃣ Consumir API de regiones
+        try {
+            $response = Http::get($baseUrl . '/wompi/regiones');
+            $regiones = $response->successful() ? $response->json() : [];
+
+            if (!$response->successful()) {
+                Log::error('⚠️ Error al consumir API de regiones.', [
+                    'status' => $response->status(),
+                    'endpoint' => $baseUrl . '/wompi/regiones'
+                ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('⚠️ Excepción al conectar con API de regiones: ' . $e->getMessage());
+            $regiones = [];
+        }
+
+        // 4️⃣ Buscar el país y territorio seleccionados
         $paisNombre = null;
         $territorioNombre = null;
 
         foreach ($regiones as $region) {
             if ($region['id'] === $paisId) {
                 $paisNombre = $region['nombre'];
-
                 foreach ($region['territorios'] as $territorio) {
                     if ($territorio['id'] === $territorioId) {
                         $territorioNombre = $territorio['nombre'];
-                        break 2; // salir de ambos foreach
+                        break 2;
                     }
                 }
             }
@@ -176,44 +235,40 @@ class AsesoriaUsuarioController extends Controller
 
         $asesoria = Asesoria::findOrFail($id);
 
-
-        // 4️⃣ Armar JSON final
+        // 5️⃣ Armar JSON final para la transacción
         $body = [
             "tarjetaCreditoDebido" => [
-                "numeroTarjeta" => str_replace(' ', '', $numeroTarjeta),
-                "cvv"             => $cvv,
-                "mesVencimiento"  => $mes,
-                "anioVencimiento" => $anio
+                "numeroTarjeta"    => str_replace(' ', '', $numeroTarjeta),
+                "cvv"              => $cvv,
+                "mesVencimiento"   => $mes,
+                "anioVencimiento"  => $anio
             ],
-            "monto"       => $asesoria->modo->costo ?? 0.00,
-            "urlRedirect" => url('usuario/asesoria/pago_finalizado'),
-            "nombre"      => auth()->user()->name,
-            "apellido"    => auth()->user()->lastname,
-            "email"       => auth()->user()->email,
-            "ciudad"      => $territorioNombre ?? 'Desconocida',
-            "direccion"   => $territorioNombre ?? 'Desconocida',
-            "idPais"      => $paisId,
-            "idRegion"    => $territorioId,
+            "monto"        => $asesoria->modo->costo ?? 0.00,
+            "urlRedirect"  => url('usuario/asesoria/pago_finalizado'),
+            "nombre"       => auth()->user()->name,
+            "apellido"     => auth()->user()->lastname,
+            "email"        => auth()->user()->email,
+            "ciudad"       => $territorioNombre ?? 'Desconocida',
+            "direccion"    => $territorioNombre ?? 'Desconocida',
+            "idPais"       => $paisId,
+            "idRegion"     => $territorioId,
             "codigoPostal" => "10101",
-            "telefono" => preg_replace('/\D/', '', auth()->user()->phone),
+            "telefono"     => preg_replace('/\D/', '', auth()->user()->phone),
         ];
 
+        // 6️⃣ Enviar transacción a la API de Wompi
         try {
-
-            $asesoria = Asesoria::findOrFail($id);
-
-            $response = Http::post('http://44.212.113.88:8081/api/wompi/transaccion/3ds', $body);
+            $response = Http::post($baseUrl . '/wompi/transaccion/3ds', $body);
             $data = $response->json();
 
-            // Si existe urlCompletarPago3Ds -> redireccionar
             if (isset($data['urlCompletarPago3Ds'])) {
-
-                //guardar registro de pago
-                $asesoria->costo_asesoria = $asesoria->modo->costo ?? 0.00;
-                $asesoria->estado_asesoria_id = 2;
-                $asesoria->fecha_pago = Carbon::now();
-                $asesoria->id_trasaccion = $data['idTransaccion'] ?? null;
-                $asesoria->save();
+                // Guardar registro de pago
+                $asesoria->update([
+                    'costo_asesoria'     => $asesoria->modo->costo ?? 0.00,
+                    'estado_asesoria_id' => 2,
+                    'fecha_pago'         => Carbon::now(),
+                    'id_trasaccion'      => $data['idTransaccion'] ?? null,
+                ]);
 
                 return redirect()->away($data['urlCompletarPago3Ds']);
             }
@@ -221,16 +276,17 @@ class AsesoriaUsuarioController extends Controller
             // Si hay error en la transacción
             if (isset($data['servicioError'])) {
                 $errorMessage = implode(', ', $data['mensajes'] ?? ['Error desconocido en el servicio']);
-
                 return back()->withErrors(['servicio_general' => $errorMessage]);
             }
 
-            // Por seguridad, fallback
+            // Fallback
             return back()->with('error', 'Error inesperado en la transacción.');
         } catch (\Exception $e) {
+            Log::error('⚠️ Excepción al conectar con API de pagos: ' . $e->getMessage());
             return back()->with('error', 'No se pudo conectar con el servicio de pagos: ' . $e->getMessage());
         }
     }
+
 
     public function pago_finalizado(Request $request)
     {
@@ -238,31 +294,63 @@ class AsesoriaUsuarioController extends Controller
             $asesoria = Asesoria::where('id_trasaccion', $request->idTransaccion)->first();
 
             if (!$asesoria) {
-                // Opcional: redirigir o mostrar mensaje si no existe
                 return redirect()->back()->with('error', 'No se encontró la transacción.');
             }
 
-            // ===== Envío de correo =====
+            // ===== Datos del usuario =====
             $emailDestino = $asesoria->user->email ?? null;
             $nombreCliente = trim(($asesoria->user->name ?? '') . ' ' . ($asesoria->user->lastname ?? '')) ?: 'Cliente';
 
-            // Asegurar que la configuración regional esté en español
+            // ===== Fecha formateada =====
             Carbon::setLocale('es');
-
-            // Combinar fecha y hora
             $fechaCompleta = Carbon::parse("{$asesoria->fecha} {$asesoria->hora}");
-
-            // Ejemplo: "Lunes 21 de octubre de 2025 a las 10:30 a.m."
             $fechaFormateada = $fechaCompleta->translatedFormat('l j \\d\\e F \\d\\e Y \\a \\l\\a\\s g:i a');
 
+            // ===== Obtener URL base de la API desde la base de datos =====
+            $configuracion = Configuracion::first();
+
+            if (!$configuracion || empty($configuracion->detalle)) {
+                Log::error('❌ No se encontró la configuración de API backend en la base de datos.');
+                return redirect()->back()->with('error', 'No se pudo obtener la configuración del servicio de correo.');
+            }
+
+            $baseUrl = rtrim($configuracion->detalle, '/');
+
+            // ===== Envío de correo vía API Microsoft =====
             if ($emailDestino) {
+                $asuntoEmail = '📅 Confirmación pendiente de cita agendada';
+                $cuerpoEmail = "Hola {$nombreCliente},\n\n"
+                    . "Tu cita ha sido agendada exitosamente para el día {$fechaFormateada}.\n"
+                    . "Te enviaremos una notificación de confirmación cuando sea aprobada.\n\n"
+                    . "Atentamente,\nEquipo de Asesorías";
+
                 try {
-                    Mail::send('emails.confirmacion_cita', ['cliente' => $nombreCliente, 'fecha' => $fechaFormateada], function ($message) use ($emailDestino) {
-                        $message->to($emailDestino)
-                            ->subject('📅 Confirmación pendiente de cita agendada');
-                    });
-                } catch (Exception $e) {
-                    Log::error("Fallo al enviar el correo de notificación: " . $e->getMessage());
+                    $payload = [
+                        "to" => $emailDestino,
+                        "subject" => $asuntoEmail,
+                        "body" => $cuerpoEmail,
+                        "attachments" => []
+                    ];
+
+                    $response = Http::withHeaders([
+                        'Accept' => 'application/json',
+                        'Content-Type' => 'application/json',
+                    ])->post($baseUrl . '/microsoft/send-mail', $payload);
+
+                    if ($response->successful()) {
+                        Log::info("📨 Correo de confirmación enviado correctamente.", [
+                            'destinatario' => $emailDestino,
+                            'asunto' => $asuntoEmail,
+                        ]);
+                    } else {
+                        Log::error("❌ Error al enviar correo vía API Microsoft.", [
+                            'status' => $response->status(),
+                            'respuesta' => $response->body(),
+                            'destinatario' => $emailDestino,
+                        ]);
+                    }
+                } catch (\Exception $e) {
+                    Log::error("⚠️ Excepción al enviar correo vía API: " . $e->getMessage());
                 }
             } else {
                 Log::warning("No se envió correo: la asesoría no tiene un usuario con email válido.");
@@ -270,11 +358,11 @@ class AsesoriaUsuarioController extends Controller
 
             return view('usuario.asesoria.pago_finalizado', compact('asesoria'));
         } catch (\Exception $e) {
-            // Manejo de error: log y redirección
             Log::error('Error al buscar asesoria: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Ocurrió un error al procesar el pago.');
         }
     }
+
 
 
 

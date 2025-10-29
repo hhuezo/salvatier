@@ -152,7 +152,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('seguridadMenu', 'usuarioOption');
+            expandMenuAndHighlightOption('li-empresa');
 
             $('#datatable-basic').DataTable({
                 language: {

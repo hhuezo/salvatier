@@ -68,7 +68,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('pago', PagoController::class);
     Route::resource('empresa', EmpresaController::class);
     Route::resource('encargado_pago', EncargadoPagoController::class);
-     Route::resource('oficina', OficinaController::class);
+    Route::resource('oficina', OficinaController::class);
 
     /*Route::get('administracion/servicio_show/{id}', [PagoController::class, 'servicio_show'])->name('servicio.show');
     Route::get('administracion/pago/previsualizacion', [PagoController::class, 'previsualizacion'])->name('pago.previsualizacion');

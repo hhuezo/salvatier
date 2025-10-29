@@ -244,7 +244,7 @@
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-pago');
+            expandMenuAndHighlightOption('li-contrato');
 
 
         });

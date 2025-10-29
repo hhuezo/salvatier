@@ -132,7 +132,7 @@
     <!-- Activar DataTable -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-pago');
+            expandMenuAndHighlightOption('li-contrato');
 
             $('#datatable-basic').DataTable({
                 language: {

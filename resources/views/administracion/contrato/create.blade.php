@@ -145,7 +145,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            expandMenuAndHighlightOption('li-pago');
+            expandMenuAndHighlightOption('li-contrato');
 
             $('.select2').select2({
                 //placeholder: "Seleccione una opción",
