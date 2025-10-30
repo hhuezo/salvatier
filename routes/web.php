@@ -5,7 +5,7 @@ use App\Http\Controllers\administracion\AsesoriaController;
 use App\Http\Controllers\administracion\ContratoController;
 use App\Http\Controllers\administracion\EmpresaController;
 use App\Http\Controllers\administracion\EncargadoPagoController;
-use App\Http\Controllers\Administracion\ModoAsesoriaController;
+use App\Http\Controllers\administracion\ModoAsesoriaController;
 use App\Http\Controllers\administracion\NotificacionController;
 use App\Http\Controllers\administracion\OficinaController;
 use App\Http\Controllers\administracion\PagoController;
